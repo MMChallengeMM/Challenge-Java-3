@@ -37,7 +37,7 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
     }
 
     @Override
-    public Failure getByIdAdmin() {
+    public Failure getByIdAdmin(UUID id) {
         return null;
     }
 

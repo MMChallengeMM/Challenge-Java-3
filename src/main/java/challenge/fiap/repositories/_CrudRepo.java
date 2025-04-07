@@ -55,7 +55,7 @@ public interface _CrudRepo<T> {
      *
      * @return O objeto correspondente, ou null se não encontrado.
      */
-    T getByIdAdmin();
+    T getByIdAdmin(UUID id);
 
     /**
      * Remove permanentemente um objeto com base no seu ID.

@@ -44,6 +44,17 @@ public class Report extends _BaseEntity {
      */
     public Report generateData() {
         // TODO: Fazer a lógica de gerar dados.
+
+        switch (reportType) {
+            case GERAL:
+                System.out.println("GERAL");
+                break;
+            case PERIODO:
+                System.out.println("PERIODO");
+                break;
+        }
+
+
         return this;
     }
 

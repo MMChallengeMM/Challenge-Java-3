@@ -37,7 +37,7 @@ public class UserRepo extends _BaseRepo implements _CrudRepo<User>{
     }
 
     @Override
-    public User getByIdAdmin() {
+    public User getByIdAdmin(UUID id) {
         return null;
     }
 

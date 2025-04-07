@@ -37,7 +37,7 @@ public class ReportRepo extends _BaseRepo implements _CrudRepo<Report> {
     }
 
     @Override
-    public Report getByIdAdmin() {
+    public Report getByIdAdmin(UUID id) {
         return null;
     }
 
