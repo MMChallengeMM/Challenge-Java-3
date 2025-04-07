@@ -1,4 +1,4 @@
-package challenge.fiap;
+package challenge.fiap.resources;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;

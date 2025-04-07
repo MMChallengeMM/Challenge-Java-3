@@ -1,4 +1,8 @@
 package challenge.fiap.models;
 
-public class Admin {
+public class Admin extends User {
+    @Override
+    public String showDetails() {
+        return "";
+    }
 }
