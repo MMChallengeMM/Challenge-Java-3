@@ -55,4 +55,9 @@ public class ReportRepo extends _BaseRepo implements _CrudRepo<Report> {
     public void delete(Report object) {
 
     }
+
+    @Override
+    public void update(Report oldObject, Report newObject) {
+
+    }
 }

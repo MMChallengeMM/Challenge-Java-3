@@ -79,4 +79,12 @@ public interface _CrudRepo<T> {
      * @param object O objeto a ser deletado.
      */
     void delete(T object);
+
+    /**
+     * Busca um objeto e atualiza com o novo objeto fornecido.
+     *
+     * @param oldObject Objeto antigo para atualizar.
+     * @param newObject Objeto novo para atualizar.
+     */
+    void update(T oldObject, T newObject);
 }

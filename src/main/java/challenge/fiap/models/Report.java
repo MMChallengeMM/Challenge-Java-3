@@ -1,19 +1,22 @@
 package challenge.fiap.models;
 
+import challenge.fiap.repositories.FailureRepo;
+
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Report extends _BaseEntity {
     private String title;
     private String info;
-    private REPORT_TYPE reportType;
     private final LocalDateTime generationDate = LocalDateTime.now();
+    private REPORT_TYPE reportType;
     private Period period = null;
     private int totalNumberOfFailures;
-    private Map<FAILURE_STATUS, Integer> numberOfFailuresByStatus = new HashMap<>();
-    private Map<FAILURE_TYPE, Integer> numberOfFailuresByType = new HashMap<>();
+    private final Map<FAILURE_STATUS, Integer> numberOfFailuresByStatus = new HashMap<>();
+    private final Map<FAILURE_TYPE, Integer> numberOfFailuresByType = new HashMap<>();
 
     @Override
     public String showDetails() {
@@ -21,6 +24,14 @@ public class Report extends _BaseEntity {
     }
 
     public Report() {
+        numberOfFailuresByStatus.put(FAILURE_STATUS.PENDENTE, null);
+        numberOfFailuresByStatus.put(FAILURE_STATUS.CANCELADA, null);
+        numberOfFailuresByStatus.put(FAILURE_STATUS.CONCLUIDA, null);
+
+        numberOfFailuresByType.put(FAILURE_TYPE.MECANICA, null);
+        numberOfFailuresByType.put(FAILURE_TYPE.ELETRICA, null);
+        numberOfFailuresByType.put(FAILURE_TYPE.SOFTWARE, null);
+        numberOfFailuresByType.put(FAILURE_TYPE.OUTRO, null);
     }
 
     public Report(String title, String info, REPORT_TYPE reportType) {
@@ -45,15 +56,35 @@ public class Report extends _BaseEntity {
     public Report generateData() {
         // TODO: Fazer a lógica de gerar dados.
 
+        var repo = new FailureRepo();
+
+        var failures = repo.get();
+
         switch (reportType) {
             case GERAL:
-                System.out.println("GERAL");
+                failures = failures.stream()
+                        .filter(f -> !f.isOnGeneralReport())
+                                .toList();
+                repo.switchOnGeneralReport(failures);
+
+                totalNumberOfFailures = failures.size();
+
+                var failureTypes = failures.stream()
+                        .map(Failure::getFailureType)
+                        .toList();
+
+                for (var failureType : failureTypes) {
+                    numberOfFailuresByType.put(failureType, failures.stream()
+                            .collect(Collectors.groupingBy(Failure::getFailureType, Collectors.counting())).get(failureType).intValue()
+                    );
+                }
+                System.out.println(failureTypes);
+
                 break;
             case PERIODO:
-                System.out.println("PERIODO");
+                this.period = new Period(LocalDateTime.of(2000, 12,4,10,23), LocalDateTime.now());
                 break;
         }
-
 
         return this;
     }

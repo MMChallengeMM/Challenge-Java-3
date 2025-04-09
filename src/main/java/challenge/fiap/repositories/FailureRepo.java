@@ -1,5 +1,6 @@
 package challenge.fiap.repositories;
 
+import challenge.fiap.models.FAILURE_TYPE;
 import challenge.fiap.models.Failure;
 
 import java.util.List;
@@ -13,7 +14,13 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
 
     @Override
     public List<Failure> get() {
-        return List.of();
+        return List.of(
+                new Failure("ovo", FAILURE_TYPE.ELETRICA),
+                new Failure("carlos", FAILURE_TYPE.MECANICA),
+                new Failure("molo", FAILURE_TYPE.OUTRO),
+                new Failure("zebra", FAILURE_TYPE.OUTRO)
+        );
+
     }
 
     @Override
@@ -53,6 +60,15 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
 
     @Override
     public void delete(Failure object) {
+
+    }
+
+    @Override
+    public void update(Failure oldObject, Failure newObject) {
+
+    }
+
+    public void switchOnGeneralReport(List<Failure> failures) {
 
     }
 }

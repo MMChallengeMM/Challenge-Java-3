@@ -55,4 +55,9 @@ public class UserRepo extends _BaseRepo implements _CrudRepo<User>{
     public void delete(User object) {
 
     }
+
+    @Override
+    public void update(User oldObject, User newObject) {
+
+    }
 }
