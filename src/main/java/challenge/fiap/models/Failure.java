@@ -3,9 +3,9 @@ package challenge.fiap.models;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Failure extends _BaseEntity {
+public class Failure extends _BaseEntity<Failure> {
     private String description;
-    private final LocalDateTime generationDate = LocalDateTime.now();
+    private LocalDateTime generationDate = LocalDateTime.now();
     private boolean onGeneralReport = false;
     private FAILURE_TYPE failureType;
     private FAILURE_STATUS failureStatus = FAILURE_STATUS.PENDENTE;
@@ -13,6 +13,20 @@ public class Failure extends _BaseEntity {
     @Override
     public String showDetails() {
         return toString();
+    }
+
+    @Override
+    public Failure replaceBy(Failure object) {
+        setId(object.getId());
+        setDeleted(object.isDeleted());
+
+        setGenerationDate(object.getGenerationDate());
+        setDescription(object.getDescription());
+        setFailureType(object.getFailureType());
+        setOnGeneralReport(object.isOnGeneralReport());
+        setFailureStatus(object.getFailureStatus());
+
+        return this;
     }
 
     public Failure() {
@@ -57,6 +71,10 @@ public class Failure extends _BaseEntity {
 
     public void setFailureStatus(FAILURE_STATUS failureStatus) {
         this.failureStatus = failureStatus;
+    }
+
+    public void setGenerationDate(LocalDateTime generationDate) {
+        this.generationDate = generationDate;
     }
 
     @Override

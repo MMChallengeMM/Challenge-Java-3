@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class Report extends _BaseEntity {
+public class Report extends _BaseEntity<Report> {
     private String title;
     private String info;
     private final LocalDateTime generationDate = LocalDateTime.now();
@@ -21,6 +21,11 @@ public class Report extends _BaseEntity {
     @Override
     public String showDetails() {
         return toString();
+    }
+
+    @Override
+    public Report replaceBy(Report object) {
+        return this;
     }
 
     public Report() {

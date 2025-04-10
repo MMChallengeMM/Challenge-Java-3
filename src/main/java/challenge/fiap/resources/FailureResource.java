@@ -10,7 +10,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.UUID;
 
-@Path("/falhas")
+@Path("/api/falhas")
 public class FailureResource {
 
     private final FailureRepo REPO = new FailureRepo();

@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.Objects;
 import java.util.UUID;
 
-public abstract class _BaseEntity {
+public abstract class _BaseEntity<T> {
 
     protected Logger LOGGER = LogManager.getLogger(getClass());
 
@@ -14,6 +14,8 @@ public abstract class _BaseEntity {
     private boolean deleted = false;
 
     public abstract String showDetails();
+
+    public abstract T replaceBy(T object);
 
     public _BaseEntity() {
     }

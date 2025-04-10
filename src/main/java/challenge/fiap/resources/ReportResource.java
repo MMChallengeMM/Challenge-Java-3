@@ -6,7 +6,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("/relatorios")
+@Path("/api/relatorios")
 public class ReportResource {
 
     @GET
