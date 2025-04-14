@@ -5,10 +5,8 @@ import challenge.fiap.models.FAILURE_STATUS;
 import challenge.fiap.models.FAILURE_TYPE;
 import challenge.fiap.models.Failure;
 
-import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -17,7 +15,7 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
     @Override
     public void add(Failure object) {
 
-        var query = "INSERT INTO TB_FALHAS ( id_falha, desc_falha, status, tipo, dt_hr, deleted, emRelatorioGeral) VALUES (?, ?, ?, ?, ?, 0, ?)";
+        var query = "INSERT INTO TB_FALHAS ( id, desc_falha, status, tipo, dt_hr, deleted, emRelatorioGeral) VALUES (?, ?, ?, ?, ?, 0, ?)";
 
         LOGGER.info("Criando falha: {}", object.getId());
 
@@ -27,7 +25,7 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
             stmt.setString(2, object.getDescription());
             stmt.setString(3, object.getFailureStatus().toString());
             stmt.setString(4, object.getFailureType().toString());
-            stmt.setDate(5, Date.valueOf(object.getGenerationDate().toString()));
+            stmt.setTimestamp(5, Timestamp.valueOf(object.getGenerationDate()));
             stmt.setBoolean(6, object.isOnGeneralReport());
             stmt.executeUpdate();
 
@@ -53,13 +51,13 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
 
             while (result.next()) {
                 var failure = new Failure();
-                failure.setId(UUID.fromString(result.getString("id_falha")));
+                failure.setId(UUID.fromString(result.getString("id")));
                 failure.setDeleted(result.getBoolean("deleted"));
 
                 failure.setDescription(result.getString("desc_falha"));
                 failure.setFailureStatus(FAILURE_STATUS.valueOf(result.getString("status")));
                 failure.setFailureType(FAILURE_TYPE.valueOf(result.getString("tipo")));
-                failure.setGenerationDate(LocalDateTime.from(result.getDate("dt_hr").toLocalDate()));
+                failure.setGenerationDate((result.getTimestamp("dt_hr")).toLocalDateTime());
                 failure.setOnGeneralReport(result.getBoolean("emRelatorioGeral"));
                 failureList.add(failure);
             }
@@ -74,7 +72,7 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
 
     @Override
     public Failure getById(UUID id) {
-        var query = "SELECT * FROM TB_FALHAS WHERE deleted = 0 && id_falha = ?";
+        var query = "SELECT * FROM TB_FALHAS WHERE deleted = 0 && id = ?";
 
         LOGGER.info("Buscando falha ativa por id no banco de dados.");
 
@@ -85,13 +83,13 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
 
             if (result.next()) {
                 var failure = new Failure();
-                failure.setId(UUID.fromString(result.getString("id_falha")));
+                failure.setId(UUID.fromString(result.getString("id")));
                 failure.setDeleted(result.getBoolean("deleted"));
 
                 failure.setDescription(result.getString("desc_falha"));
                 failure.setFailureStatus(FAILURE_STATUS.valueOf(result.getString("status")));
                 failure.setFailureType(FAILURE_TYPE.valueOf(result.getString("tipo")));
-                failure.setGenerationDate(LocalDateTime.from(result.getDate("dt_hr").toLocalDate()));
+                failure.setGenerationDate((result.getTimestamp("dt_hr")).toLocalDateTime());
                 failure.setOnGeneralReport(result.getBoolean("emRelatorioGeral"));
 
                 LOGGER.info("Falha por id encontrado: {}", id);
@@ -108,22 +106,21 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
 
     @Override
     public void updateById(UUID id, Failure object) {
-        var failure = getById(id).replaceBy(object);
+        var failure = getById(id).updateAttributes(object);
 
-        var query = "UPDATE TB_FALHAS SET id_falha = ?, desc_falha = ?, status = ?, tipo = ?, dt_hr = ?, deleted = ?, emRelatorioGeral = ? WHERE id_falha = ? ";
+        var query = "UPDATE TB_FALHAS SET desc_falha = ?, status = ?, tipo = ?, dt_hr = ?, deleted = ?, emRelatorioGeral = ? WHERE id = ? ";
 
         LOGGER.info("Atualizando falha ativa por id no banco de dados.");
 
         try (var connection = DatabaseConfig.getConnection()) {
             var stmt = connection.prepareStatement(query);
-            stmt.setString(1,failure.getId().toString());
-            stmt.setString(2,failure.getDescription());
-            stmt.setString(3,failure.getFailureStatus().toString());
-            stmt.setString(4,failure.getFailureType().toString());
-            stmt.setDate(5, Date.valueOf(failure.getGenerationDate().toLocalDate()));
-            stmt.setBoolean(6,failure.isDeleted());
-            stmt.setBoolean(7,failure.isOnGeneralReport());
-            stmt.setString(8,failure.getId().toString());
+            stmt.setString(1,failure.getDescription());
+            stmt.setString(2,failure.getFailureStatus().toString());
+            stmt.setString(3,failure.getFailureType().toString());
+            stmt.setTimestamp(4, Timestamp.valueOf(failure.getGenerationDate()));
+            stmt.setBoolean(5,failure.isDeleted());
+            stmt.setBoolean(6,failure.isOnGeneralReport());
+            stmt.setString(7,failure.getId().toString());
             stmt.executeUpdate();
 
             LOGGER.info("Falha atualizada por id: {}", id);
@@ -137,7 +134,7 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
     @Override
     public void removeById(UUID id) {
 
-        var query = "UPDATE TB_FALHAS SET deleted = 1 WHERE id_falha = ?";
+        var query = "UPDATE TB_FALHAS SET deleted = 1 WHERE id = ?";
 
         LOGGER.info("Removendo falha por id no banco de dados.");
 
@@ -167,13 +164,13 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
 
             while (result.next()) {
                 var failure = new Failure();
-                failure.setId(UUID.fromString(result.getString("id_falha")));
+                failure.setId(UUID.fromString(result.getString("id")));
                 failure.setDeleted(result.getBoolean("deleted"));
 
                 failure.setDescription(result.getString("desc_falha"));
                 failure.setFailureStatus(FAILURE_STATUS.valueOf(result.getString("status")));
                 failure.setFailureType(FAILURE_TYPE.valueOf(result.getString("tipo")));
-                failure.setGenerationDate(LocalDateTime.from(result.getDate("dt_hr").toLocalDate()));
+                failure.setGenerationDate((result.getTimestamp("dt_hr")).toLocalDateTime());
                 failure.setOnGeneralReport(result.getBoolean("emRelatorioGeral"));
                 failureList.add(failure);
             }
@@ -188,7 +185,7 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
 
     @Override
     public Failure getByIdAdmin(UUID id) {
-        var query = "SELECT * FROM TB_FALHAS WHERE id_falha = ?";
+        var query = "SELECT * FROM TB_FALHAS WHERE id = ?";
 
         LOGGER.info("Buscando falha por id no banco de dados.");
 
@@ -199,13 +196,13 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
 
             if (result.next()) {
                 var failure = new Failure();
-                failure.setId(UUID.fromString(result.getString("id_falha")));
+                failure.setId(UUID.fromString(result.getString("id")));
                 failure.setDeleted(result.getBoolean("deleted"));
 
                 failure.setDescription(result.getString("desc_falha"));
                 failure.setFailureStatus(FAILURE_STATUS.valueOf(result.getString("status")));
                 failure.setFailureType(FAILURE_TYPE.valueOf(result.getString("tipo")));
-                failure.setGenerationDate(LocalDateTime.from(result.getDate("dt_hr").toLocalDate()));
+                failure.setGenerationDate((result.getTimestamp("dt_hr")).toLocalDateTime());
                 failure.setOnGeneralReport(result.getBoolean("emRelatorioGeral"));
 
                 LOGGER.info("Falha geral por id encontrada: {}", id);
@@ -222,7 +219,7 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
 
     @Override
     public void deleteById(UUID id) {
-        var query = "DELETE FROM TB_FALHAS WHERE id_falha = ?";
+        var query = "DELETE FROM TB_FALHAS WHERE id = ?";
 
         LOGGER.info("Deletando falha por id no banco de dados.");
 
@@ -258,6 +255,18 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
     }
 
     public void switchOnGeneralReport(List<Failure> failures) {
+        var query = "UPDATE TB_FALHAS SET emRelatorioGeral = ? WHERE id = ?";
 
+        try (var connection = DatabaseConfig.getConnection()) {
+            var stmt = connection.prepareStatement(query);
+            for (var f: failures) {
+                f.setOnGeneralReport(!f.isOnGeneralReport());
+                stmt.setBoolean(1, f.isOnGeneralReport());
+                stmt.setString(2, f.getId().toString());
+                stmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

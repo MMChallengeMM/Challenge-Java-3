@@ -5,4 +5,9 @@ public class Admin extends User {
     public String showDetails() {
         return "";
     }
+
+    @Override
+    public Object updateAttributes(Object object) {
+        return null;
+    }
 }

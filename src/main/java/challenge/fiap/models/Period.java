@@ -36,6 +36,14 @@ public class Period {
         return finalDate;
     }
 
+    public void setInicialDate(LocalDateTime inicialDate) {
+        this.inicialDate = inicialDate;
+    }
+
+    public void setFinalDate(LocalDateTime finalDate) {
+        this.finalDate = finalDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -26,14 +26,14 @@ public class FailureResource {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response failureById(@PathParam("id") UUID id) {
+    public Response getFailureById(@PathParam("id") UUID id) {
         var failure = REPO.getById(id);
         //TODO: Enviar a falha para o front
         return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
     @PUT
-    @Path("/{id}/update")
+    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateFailure(@PathParam("id") UUID id) {
         var failure = REPO.getById(id);
@@ -46,7 +46,6 @@ public class FailureResource {
     }
 
     @POST
-    @Path("/new")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addFailure() {
         //TODO: Capturar dados do front

@@ -15,7 +15,7 @@ public abstract class _BaseEntity<T> {
 
     public abstract String showDetails();
 
-    public abstract T replaceBy(T object);
+    public abstract T updateAttributes(T object);
 
     public _BaseEntity() {
     }

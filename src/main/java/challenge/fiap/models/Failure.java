@@ -16,7 +16,7 @@ public class Failure extends _BaseEntity<Failure> {
     }
 
     @Override
-    public Failure replaceBy(Failure object) {
+    public Failure updateAttributes(Failure object) {
         setId(object.getId());
         setDeleted(object.isDeleted());
 

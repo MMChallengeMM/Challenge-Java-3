@@ -24,7 +24,7 @@ public class Report extends _BaseEntity<Report> {
     }
 
     @Override
-    public Report replaceBy(Report object) {
+    public Report updateAttributes(Report object) {
         return this;
     }
 
@@ -83,11 +83,37 @@ public class Report extends _BaseEntity<Report> {
                             .collect(Collectors.groupingBy(Failure::getFailureType, Collectors.counting())).get(failureType).intValue()
                     );
                 }
-                System.out.println(failureTypes);
+
+                if (numberOfFailuresByType.containsValue(null)) {
+                    numberOfFailuresByType.forEach((k,v) -> {
+                        if (v == null) {
+                            numberOfFailuresByType.put(k, 0);
+                        }
+                    });
+                }
+
+                var failureStatuses = failures.stream()
+                        .map(Failure::getFailureStatus)
+                        .toList();
+
+                for (var failureStatus : failureStatuses) {
+                    numberOfFailuresByStatus.put(failureStatus, failures.stream()
+                            .collect(Collectors.groupingBy(Failure::getFailureStatus, Collectors.counting())).get(failureStatus).intValue()
+                    );
+                }
+
+                if (numberOfFailuresByStatus.containsValue(null)) {
+                    numberOfFailuresByStatus.forEach((k,v) -> {
+                        if (v == null) {
+                            numberOfFailuresByStatus.put(k, 0);
+                        }
+                    });
+                }
 
                 break;
             case PERIODO:
-                this.period = new Period(LocalDateTime.of(2000, 12,4,10,23), LocalDateTime.now());
+                this.period = new Period();
+
                 break;
         }
 
@@ -104,6 +130,10 @@ public class Report extends _BaseEntity<Report> {
 
     public String getInfo() {
         return info;
+    }
+
+    public Period getPeriod() {
+        return period;
     }
 
     public void setInfo(String info) {

@@ -1,0 +1,102 @@
+2025-04-14 09:20:37 INFO  FailureRepo:46 - Buscando falhas não deletadas no banco de dados.
+2025-04-14 09:20:38 ERROR FailureRepo:68 - Erro ao recuperar falhas: ORA-00942: a tabela ou view não existe
+
+https://docs.oracle.com/error-help/db/ora-00942/
+2025-04-14 09:25:34 INFO  FailureRepo:46 - Buscando falhas não deletadas no banco de dados.
+2025-04-14 09:25:34 INFO  FailureRepo:65 - Falhas ativas encontradas.
+2025-04-14 09:28:37 INFO  FailureRepo:20 - Criando falha: e1d44dd5-6ca4-4580-8659-71f82b11d559
+2025-04-14 09:28:37 INFO  FailureRepo:32 - Falha adicionada com sucesso: e1d44dd5-6ca4-4580-8659-71f82b11d559
+2025-04-14 09:28:37 INFO  FailureRepo:20 - Criando falha: 4f74e626-7a13-4a91-b9f3-5c29d94c5b21
+2025-04-14 09:28:37 INFO  FailureRepo:32 - Falha adicionada com sucesso: 4f74e626-7a13-4a91-b9f3-5c29d94c5b21
+2025-04-14 09:28:37 INFO  FailureRepo:20 - Criando falha: cb6efdab-b54c-4a96-a51f-5cf4977f9aa2
+2025-04-14 09:28:37 INFO  FailureRepo:32 - Falha adicionada com sucesso: cb6efdab-b54c-4a96-a51f-5cf4977f9aa2
+2025-04-14 09:28:37 INFO  FailureRepo:20 - Criando falha: 6fe27c8e-ac27-4040-a834-bb176983ed15
+2025-04-14 09:28:38 INFO  FailureRepo:32 - Falha adicionada com sucesso: 6fe27c8e-ac27-4040-a834-bb176983ed15
+2025-04-14 09:28:38 INFO  FailureRepo:20 - Criando falha: 21c9b962-d278-41cb-bd5c-39df20d7342e
+2025-04-14 09:28:38 INFO  FailureRepo:32 - Falha adicionada com sucesso: 21c9b962-d278-41cb-bd5c-39df20d7342e
+2025-04-14 09:28:38 INFO  FailureRepo:20 - Criando falha: a14b92c5-b853-40dc-ad4a-a3bc2c9a099a
+2025-04-14 09:28:38 INFO  FailureRepo:32 - Falha adicionada com sucesso: a14b92c5-b853-40dc-ad4a-a3bc2c9a099a
+2025-04-14 09:28:38 INFO  FailureRepo:20 - Criando falha: 71039ddf-4a5b-4cba-b9f7-dbac7162f1ff
+2025-04-14 09:28:38 INFO  FailureRepo:32 - Falha adicionada com sucesso: 71039ddf-4a5b-4cba-b9f7-dbac7162f1ff
+2025-04-14 09:28:38 INFO  FailureRepo:20 - Criando falha: 053e929c-7426-4295-8584-dd0e1aadd6eb
+2025-04-14 09:28:38 INFO  FailureRepo:32 - Falha adicionada com sucesso: 053e929c-7426-4295-8584-dd0e1aadd6eb
+2025-04-14 09:28:38 INFO  FailureRepo:20 - Criando falha: 63b97dd7-03e8-4504-8098-051a6c887567
+2025-04-14 09:28:38 INFO  FailureRepo:32 - Falha adicionada com sucesso: 63b97dd7-03e8-4504-8098-051a6c887567
+2025-04-14 09:28:38 INFO  FailureRepo:20 - Criando falha: 6d6eb9b4-f99f-4e04-a568-fd3d7cbab8db
+2025-04-14 09:28:38 INFO  FailureRepo:32 - Falha adicionada com sucesso: 6d6eb9b4-f99f-4e04-a568-fd3d7cbab8db
+2025-04-14 09:28:38 INFO  FailureRepo:20 - Criando falha: 16fcff21-728d-49b9-9bf9-e4bf0bf0031d
+2025-04-14 09:28:38 INFO  FailureRepo:32 - Falha adicionada com sucesso: 16fcff21-728d-49b9-9bf9-e4bf0bf0031d
+2025-04-14 09:28:38 INFO  FailureRepo:20 - Criando falha: edc5b43a-5054-43cb-a0f0-73e19f2999b0
+2025-04-14 09:28:39 INFO  FailureRepo:32 - Falha adicionada com sucesso: edc5b43a-5054-43cb-a0f0-73e19f2999b0
+2025-04-14 09:28:39 INFO  FailureRepo:20 - Criando falha: efc38345-2703-4c80-a418-aadab42c121e
+2025-04-14 09:28:39 INFO  FailureRepo:32 - Falha adicionada com sucesso: efc38345-2703-4c80-a418-aadab42c121e
+2025-04-14 09:28:39 INFO  FailureRepo:46 - Buscando falhas não deletadas no banco de dados.
+2025-04-14 09:28:39 INFO  FailureRepo:65 - Falhas ativas encontradas.
+2025-04-14 09:31:16 INFO  FailureRepo:46 - Buscando falhas não deletadas no banco de dados.
+2025-04-14 09:31:17 INFO  FailureRepo:65 - Falhas ativas encontradas.
+2025-04-14 09:41:59 INFO  FailureRepo:46 - Buscando falhas não deletadas no banco de dados.
+2025-04-14 09:42:00 INFO  FailureRepo:65 - Falhas ativas encontradas.
+2025-04-14 09:44:58 INFO  FailureRepo:46 - Buscando falhas não deletadas no banco de dados.
+2025-04-14 09:44:58 INFO  FailureRepo:65 - Falhas ativas encontradas.
+2025-04-14 09:45:52 INFO  FailureRepo:46 - Buscando falhas não deletadas no banco de dados.
+2025-04-14 09:45:52 INFO  FailureRepo:65 - Falhas ativas encontradas.
+2025-04-14 09:47:27 INFO  FailureRepo:46 - Buscando falhas não deletadas no banco de dados.
+2025-04-14 09:47:27 INFO  FailureRepo:65 - Falhas ativas encontradas.
+2025-04-14 09:47:31 INFO  FailureRepo:46 - Buscando falhas não deletadas no banco de dados.
+2025-04-14 09:47:31 INFO  FailureRepo:65 - Falhas ativas encontradas.
+2025-04-14 09:48:11 INFO  FailureRepo:46 - Buscando falhas não deletadas no banco de dados.
+2025-04-14 09:48:12 INFO  FailureRepo:65 - Falhas ativas encontradas.
+2025-04-14 09:48:17 INFO  FailureRepo:46 - Buscando falhas não deletadas no banco de dados.
+2025-04-14 09:48:17 INFO  FailureRepo:65 - Falhas ativas encontradas.
+2025-04-14 10:25:21 INFO  FailureRepo:46 - Buscando falhas não deletadas no banco de dados.
+2025-04-14 10:25:22 INFO  FailureRepo:65 - Falhas ativas encontradas.
+2025-04-14 10:27:19 INFO  FailureRepo:46 - Buscando falhas não deletadas no banco de dados.
+2025-04-14 10:27:19 INFO  FailureRepo:65 - Falhas ativas encontradas.
+2025-04-14 10:27:20 INFO  FailureRepo:46 - Buscando falhas não deletadas no banco de dados.
+2025-04-14 10:27:20 INFO  FailureRepo:65 - Falhas ativas encontradas.
+2025-04-14 10:27:24 INFO  FailureRepo:46 - Buscando falhas não deletadas no banco de dados.
+2025-04-14 10:27:25 INFO  FailureRepo:65 - Falhas ativas encontradas.
+2025-04-14 10:27:25 INFO  FailureRepo:46 - Buscando falhas não deletadas no banco de dados.
+2025-04-14 10:27:25 INFO  FailureRepo:65 - Falhas ativas encontradas.
+2025-04-14 10:55:52 INFO  FailureRepo:20 - Criando falha: 7421aeb7-42ce-446c-b93b-eb970a758cd5
+2025-04-14 10:55:52 ERROR FailureRepo:35 - Erro ao adicionar falha: ORA-00904: "ID_FALHA": identificador inválido
+
+https://docs.oracle.com/error-help/db/ora-00904/
+2025-04-14 10:58:11 INFO  FailureRepo:20 - Criando falha: c6801fee-09e1-4e7e-9a46-bfdba9428c69
+2025-04-14 10:58:11 INFO  FailureRepo:32 - Falha adicionada com sucesso: c6801fee-09e1-4e7e-9a46-bfdba9428c69
+2025-04-14 10:58:11 INFO  FailureRepo:20 - Criando falha: efb8b6ba-06ae-4b6d-a117-5f07d3ae9799
+2025-04-14 10:58:11 INFO  FailureRepo:32 - Falha adicionada com sucesso: efb8b6ba-06ae-4b6d-a117-5f07d3ae9799
+2025-04-14 10:58:11 INFO  FailureRepo:20 - Criando falha: 40b4cb3c-c427-4d14-8514-0a88552da4d2
+2025-04-14 10:58:11 INFO  FailureRepo:32 - Falha adicionada com sucesso: 40b4cb3c-c427-4d14-8514-0a88552da4d2
+2025-04-14 10:58:11 INFO  FailureRepo:20 - Criando falha: e86c49b8-3112-4751-afbc-5e4885dc41bd
+2025-04-14 10:58:11 INFO  FailureRepo:32 - Falha adicionada com sucesso: e86c49b8-3112-4751-afbc-5e4885dc41bd
+2025-04-14 10:58:11 INFO  FailureRepo:20 - Criando falha: 2c8935e9-388d-44e3-9244-c6033aa2e8c0
+2025-04-14 10:58:12 INFO  FailureRepo:32 - Falha adicionada com sucesso: 2c8935e9-388d-44e3-9244-c6033aa2e8c0
+2025-04-14 10:58:12 INFO  FailureRepo:20 - Criando falha: d27b9eea-e697-4ca1-8d84-1faaac7b59b2
+2025-04-14 10:58:12 INFO  FailureRepo:32 - Falha adicionada com sucesso: d27b9eea-e697-4ca1-8d84-1faaac7b59b2
+2025-04-14 10:58:12 INFO  FailureRepo:20 - Criando falha: cd60c696-62da-4bab-a7fa-8b8deec306ba
+2025-04-14 10:58:12 INFO  FailureRepo:32 - Falha adicionada com sucesso: cd60c696-62da-4bab-a7fa-8b8deec306ba
+2025-04-14 10:58:12 INFO  FailureRepo:20 - Criando falha: ef12a07e-c461-4ddf-a3ed-1f052ddb18f5
+2025-04-14 10:58:12 INFO  FailureRepo:32 - Falha adicionada com sucesso: ef12a07e-c461-4ddf-a3ed-1f052ddb18f5
+2025-04-14 10:58:12 INFO  FailureRepo:20 - Criando falha: 9fb1ac32-6abe-41a3-8517-8d23570c1f4a
+2025-04-14 10:58:12 INFO  FailureRepo:32 - Falha adicionada com sucesso: 9fb1ac32-6abe-41a3-8517-8d23570c1f4a
+2025-04-14 10:58:12 INFO  FailureRepo:20 - Criando falha: ab4579a3-3cbd-4f3a-8b51-077d09c2ab7f
+2025-04-14 10:58:12 INFO  FailureRepo:32 - Falha adicionada com sucesso: ab4579a3-3cbd-4f3a-8b51-077d09c2ab7f
+2025-04-14 10:58:12 INFO  FailureRepo:20 - Criando falha: 688ae93c-ca97-4e43-b6bd-590d16324dee
+2025-04-14 10:58:12 INFO  FailureRepo:32 - Falha adicionada com sucesso: 688ae93c-ca97-4e43-b6bd-590d16324dee
+2025-04-14 10:58:12 INFO  FailureRepo:20 - Criando falha: 3f2ccaff-4862-439e-be26-cfda920b6a11
+2025-04-14 10:58:12 INFO  FailureRepo:32 - Falha adicionada com sucesso: 3f2ccaff-4862-439e-be26-cfda920b6a11
+2025-04-14 10:58:12 INFO  FailureRepo:20 - Criando falha: 90e4f0ab-db3b-4b9e-b175-72c85974aae3
+2025-04-14 10:58:12 INFO  FailureRepo:32 - Falha adicionada com sucesso: 90e4f0ab-db3b-4b9e-b175-72c85974aae3
+2025-04-14 10:58:12 INFO  FailureRepo:46 - Buscando falhas não deletadas no banco de dados.
+2025-04-14 10:58:13 INFO  FailureRepo:65 - Falhas ativas encontradas.
+2025-04-14 10:58:13 INFO  FailureRepo:46 - Buscando falhas não deletadas no banco de dados.
+2025-04-14 10:58:13 INFO  FailureRepo:65 - Falhas ativas encontradas.
+2025-04-14 10:58:45 INFO  FailureRepo:46 - Buscando falhas não deletadas no banco de dados.
+2025-04-14 10:58:46 INFO  FailureRepo:65 - Falhas ativas encontradas.
+2025-04-14 10:58:46 INFO  FailureRepo:46 - Buscando falhas não deletadas no banco de dados.
+2025-04-14 10:58:46 INFO  FailureRepo:65 - Falhas ativas encontradas.
+2025-04-14 11:01:59 INFO  FailureRepo:46 - Buscando falhas não deletadas no banco de dados.
+2025-04-14 11:01:59 INFO  FailureRepo:65 - Falhas ativas encontradas.
+2025-04-14 11:01:59 INFO  FailureRepo:46 - Buscando falhas não deletadas no banco de dados.
+2025-04-14 11:02:00 INFO  FailureRepo:65 - Falhas ativas encontradas.
