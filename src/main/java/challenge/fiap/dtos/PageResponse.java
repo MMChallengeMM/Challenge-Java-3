@@ -2,9 +2,9 @@ package challenge.fiap.dtos;
 
 import java.util.List;
 
-public record SearchDto<T>(
+public record PageResponse<T>(
         int page,
-        int foundItens,
         int pageSize,
-        List<T> data
-){}
+        int totalItens,
+        List<T> itens) {
+}
