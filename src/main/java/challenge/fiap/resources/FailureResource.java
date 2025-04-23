@@ -131,7 +131,10 @@ public class FailureResource {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getFailureById(@PathParam("id") UUID id) {
+    public Response getFailureById(
+            @PathParam("id")
+            UUID id) {
+
         try {
             var failure = REPO.getById(id);
 
@@ -156,22 +159,53 @@ public class FailureResource {
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateFailure(@PathParam("id") UUID id, Failure newFailure) {
-        var failure = REPO.getById(id);
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateFailure(
 
-        //TODO: Capturar dados do front
-        failure.updateAttributes(newFailure);
+            @PathParam("id")
+            UUID id,
 
-        REPO.updateById(id, failure);
-        return Response.ok().build();
+            Failure newFailure) {
+
+        try {
+            var failure = REPO.getById(id);
+            failure.updateAttributes(newFailure);
+            REPO.updateById(id, failure);
+            return Response.ok(
+                    failure
+            ).build();
+        } catch (IllegalArgumentException e) {
+            return Response
+                    .status(Response.Status.NOT_FOUND)
+                    .entity(new ExceptionResponse(e.getMessage()))
+                    .build();
+        } catch (RuntimeException e) {
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ExceptionResponse(e.getMessage()))
+                    .build();
+        }
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addFailure(Failure failure) {
-        var failureToAdd = new Failure(failure.getDescription(), failure.getFailureType());
-        REPO.add(failureToAdd);
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addFailure(
+
+            Failure failure) {
+
+        try {
+            var failureToAdd = new Failure(failure.getDescription(), failure.getFailureType());
+            REPO.add(failureToAdd);
+            return Response.ok(
+                    failureToAdd
+            ).build();
+        } catch (RuntimeException e) {
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ExceptionResponse(e.getMessage()))
+                    .build();
+        }
     }
 
 }
