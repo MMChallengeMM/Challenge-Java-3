@@ -5,6 +5,7 @@ import challenge.fiap.models.FAILURE_STATUS;
 import challenge.fiap.models.FAILURE_TYPE;
 import challenge.fiap.models.Failure;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -50,15 +51,7 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
             var result = stmt.executeQuery(query);
 
             while (result.next()) {
-                var failure = new Failure();
-                failure.setId(UUID.fromString(result.getString("id")));
-                failure.setDeleted(result.getBoolean("deleted"));
-
-                failure.setDescription(result.getString("desc_falha"));
-                failure.setFailureStatus(FAILURE_STATUS.valueOf(result.getString("status")));
-                failure.setFailureType(FAILURE_TYPE.valueOf(result.getString("tipo")));
-                failure.setGenerationDate((result.getTimestamp("dt_hr")).toLocalDateTime());
-                failure.setOnGeneralReport(result.getBoolean("emRelatorioGeral"));
+                var failure = createFailure(result);
                 failureList.add(failure);
             }
 
@@ -82,15 +75,7 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
             var result = stmt.executeQuery();
 
             if (result.next()) {
-                var failure = new Failure();
-                failure.setId(UUID.fromString(result.getString("id")));
-                failure.setDeleted(result.getBoolean("deleted"));
-
-                failure.setDescription(result.getString("desc_falha"));
-                failure.setFailureStatus(FAILURE_STATUS.valueOf(result.getString("status")));
-                failure.setFailureType(FAILURE_TYPE.valueOf(result.getString("tipo")));
-                failure.setGenerationDate((result.getTimestamp("dt_hr")).toLocalDateTime());
-                failure.setOnGeneralReport(result.getBoolean("emRelatorioGeral"));
+                var failure = createFailure(result);
 
                 LOGGER.info("Falha por id encontrado: {}", id);
                 return failure;
@@ -102,6 +87,19 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
             LOGGER.error("Erro ao recuperar falha por id: {}", id);
             throw new RuntimeException("Erro ao recuperar falha");
         }
+    }
+
+    private Failure createFailure(ResultSet result) throws SQLException {
+        var failure = new Failure();
+        failure.setId(UUID.fromString(result.getString("id")));
+        failure.setDeleted(result.getBoolean("deleted"));
+
+        failure.setDescription(result.getString("desc_falha"));
+        failure.setFailureStatus(FAILURE_STATUS.valueOf(result.getString("status")));
+        failure.setFailureType(FAILURE_TYPE.valueOf(result.getString("tipo")));
+        failure.setGenerationDate((result.getTimestamp("dt_hr")).toLocalDateTime());
+        failure.setOnGeneralReport(result.getBoolean("emRelatorioGeral"));
+        return failure;
     }
 
     @Override
@@ -163,15 +161,7 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
             var result = stmt.executeQuery(query);
 
             while (result.next()) {
-                var failure = new Failure();
-                failure.setId(UUID.fromString(result.getString("id")));
-                failure.setDeleted(result.getBoolean("deleted"));
-
-                failure.setDescription(result.getString("desc_falha"));
-                failure.setFailureStatus(FAILURE_STATUS.valueOf(result.getString("status")));
-                failure.setFailureType(FAILURE_TYPE.valueOf(result.getString("tipo")));
-                failure.setGenerationDate((result.getTimestamp("dt_hr")).toLocalDateTime());
-                failure.setOnGeneralReport(result.getBoolean("emRelatorioGeral"));
+                var failure = createFailure(result);
                 failureList.add(failure);
             }
 
@@ -195,15 +185,7 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
             var result = stmt.executeQuery();
 
             if (result.next()) {
-                var failure = new Failure();
-                failure.setId(UUID.fromString(result.getString("id")));
-                failure.setDeleted(result.getBoolean("deleted"));
-
-                failure.setDescription(result.getString("desc_falha"));
-                failure.setFailureStatus(FAILURE_STATUS.valueOf(result.getString("status")));
-                failure.setFailureType(FAILURE_TYPE.valueOf(result.getString("tipo")));
-                failure.setGenerationDate((result.getTimestamp("dt_hr")).toLocalDateTime());
-                failure.setOnGeneralReport(result.getBoolean("emRelatorioGeral"));
+                var failure = createFailure(result);
 
                 LOGGER.info("Falha geral por id encontrada: {}", id);
                 return failure;
@@ -258,15 +240,16 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
         var query = "UPDATE TB_FALHAS SET emRelatorioGeral = ? WHERE id = ?";
 
         try (var connection = DatabaseConfig.getConnection()) {
-            var stmt = connection.prepareStatement(query);
             for (var f: failures) {
+                var stmt = connection.prepareStatement(query);
                 f.setOnGeneralReport(!f.isOnGeneralReport());
                 stmt.setBoolean(1, f.isOnGeneralReport());
                 stmt.setString(2, f.getId().toString());
                 stmt.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            LOGGER.error("Erro ao atualizar falhas: 'emRelatorioGeral'");
+            throw new RuntimeException("Erro ao atualizar falhas em sequência: 'emRelatorioGeral'");
         }
     }
 }
