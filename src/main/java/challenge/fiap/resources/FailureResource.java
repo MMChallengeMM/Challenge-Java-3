@@ -10,10 +10,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Path("/falhas")
 public class FailureResource {
@@ -61,10 +58,13 @@ public class FailureResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getFailuresFiltered(
 
+            @QueryParam("type")
             Optional<FAILURE_TYPE> type,
 
+            @QueryParam("from")
             Optional<Integer> startYear,
 
+            @QueryParam("to")
             Optional<Integer> endYear,
 
             @QueryParam("page") @DefaultValue("1")
@@ -73,10 +73,10 @@ public class FailureResource {
             @QueryParam("size") @DefaultValue("20")
             int pageSize,
 
-            @DefaultValue("date")
+            @QueryParam("orderby") @DefaultValue("date")
             String orderBy,
 
-            @DefaultValue("false")
+            @QueryParam("ascending") @DefaultValue("false")
             boolean ascending) {
 
         if (type.isEmpty() && startYear.isEmpty() && endYear.isEmpty() && orderBy.equals("date") && !ascending) {
@@ -93,6 +93,11 @@ public class FailureResource {
 
         page = page <= 0 ? 1 : page;
         try {
+            var filters = new HashMap<String, Object>();
+            type.ifPresent(ft -> filters.put("falhaTipo", ft));
+            startYear.ifPresent(sy -> filters.put("anoInicial", sy));
+            endYear.ifPresent(ey -> filters.put("anoFinal", ey));
+
             var failures = REPO.get().stream()
                     .filter(f ->
                             (type.isEmpty() || f.getFailureType().equals(type.get())) &&
@@ -116,9 +121,7 @@ public class FailureResource {
             return Response.ok(
                     new SearchResponse<>(
                             new PageResponse<>(page, pageSize, failures.size(), failuresPaginated),
-                            type.toString(),
-                            startYear.orElse(null),
-                            endYear.orElse(null),
+                            filters,
                             orderBy,
                             ascending
                     )

@@ -1,12 +1,10 @@
 package challenge.fiap.dtos;
 
-import challenge.fiap.models.Failure;
+import java.util.HashMap;
 
 public record SearchResponse<T>(
         PageResponse<T> pageResponse,
-        String type,
-        Integer startYear,
-        Integer endYear,
+        HashMap<String, Object> filters,
         String orderBy,
         boolean ascending
 ) {
