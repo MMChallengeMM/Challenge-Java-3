@@ -100,10 +100,12 @@ public class FailureResource {
                                     (endYear.isEmpty() || f.getGenerationDate().getYear() <= endYear.get()))
                     .sorted(ascending ?
                             orderBy.equals("date") ?
-                                    Comparator.comparing(Failure::getGenerationDate) : Comparator.comparing(Failure::getDescription)
+                                    Comparator.comparing(Failure::getGenerationDate) :
+                                    Comparator.comparing(Failure::getDescription)
                             :
                             orderBy.equals("date") ?
-                                    Comparator.comparing(Failure::getGenerationDate).reversed() : Comparator.comparing(Failure::getDescription).reversed()
+                                    Comparator.comparing(Failure::getGenerationDate).reversed() :
+                                    Comparator.comparing(Failure::getDescription).reversed()
                     ).toList();
 
             var start = (page - 1) * pageSize;
