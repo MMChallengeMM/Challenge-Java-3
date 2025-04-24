@@ -8,9 +8,7 @@ import challenge.fiap.models.Failure;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
     @Override
@@ -64,8 +62,8 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
     }
 
     @Override
-    public Failure getById(UUID id) {
-        var query = "SELECT * FROM TB_FALHAS WHERE deleted = 0 && id = ?";
+    public Optional<Failure> getById(UUID id) {
+        var query = "SELECT * FROM TB_FALHAS WHERE deleted = 0 AND id = ?";
 
         LOGGER.info("Buscando falha ativa por id no banco de dados.");
 
@@ -78,10 +76,10 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
                 var failure = createFailure(result);
 
                 LOGGER.info("Falha por id encontrado: {}", id);
-                return failure;
+                return Optional.of(failure);
             } else {
                 LOGGER.warn("Falha não encontrada: {}", id);
-                throw new IllegalArgumentException("Falha não encontrada");
+                return Optional.empty();
             }
         } catch (SQLException e) {
             LOGGER.error("Erro ao recuperar falha por id: {}", id);
@@ -104,7 +102,12 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
 
     @Override
     public void updateById(UUID id, Failure object) {
-        var failure = getById(id).updateAttributes(object);
+        Failure failure;
+        if (getById(id).isPresent()) {
+            failure = getById(id).get();
+        } else {
+            return;
+        }
 
         var query = "UPDATE TB_FALHAS SET desc_falha = ?, status = ?, tipo = ?, dt_hr = ?, deleted = ?, emRelatorioGeral = ? WHERE id = ? ";
 
@@ -174,7 +177,7 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
     }
 
     @Override
-    public Failure getByIdAdmin(UUID id) {
+    public Optional<Failure> getByIdAdmin(UUID id) {
         var query = "SELECT * FROM TB_FALHAS WHERE id = ?";
 
         LOGGER.info("Buscando falha por id no banco de dados.");
@@ -188,10 +191,10 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
                 var failure = createFailure(result);
 
                 LOGGER.info("Falha geral por id encontrada: {}", id);
-                return failure;
+                return Optional.of(failure);
             } else {
                 LOGGER.warn("Falha geral não encontrada: {}", id);
-                throw new IllegalArgumentException("Falha não encontrada");
+                return Optional.empty();
             }
         } catch (SQLException e) {
             LOGGER.error("Erro ao recuperar falha geral por id: {}", id);

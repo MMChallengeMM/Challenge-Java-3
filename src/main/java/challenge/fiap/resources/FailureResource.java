@@ -6,6 +6,7 @@ import challenge.fiap.dtos.SearchResponse;
 import challenge.fiap.models.FAILURE_TYPE;
 import challenge.fiap.models.Failure;
 import challenge.fiap.repositories.FailureRepo;
+import io.smallrye.faulttolerance.api.RateLimit;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -20,15 +21,12 @@ public class FailureResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getFailures(
-
-            @QueryParam("page") @DefaultValue("1")
-            int page,
-
-            @QueryParam("size") @DefaultValue("20")
-            int pageSize) {
+            @QueryParam("page") @DefaultValue("1") int page,
+            @QueryParam("size") @DefaultValue("20") int pageSize) {
 
         page = page <= 0 ? 1 : page;
         try {
+
             var failures = REPO.get().stream()
                     .sorted(Comparator.comparing(Failure::getGenerationDate))
                     .toList();
@@ -45,6 +43,7 @@ public class FailureResource {
                             failures.size(),
                             failuresPaginated)
             ).build();
+
         } catch (RuntimeException e) {
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -58,30 +57,21 @@ public class FailureResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getFailuresFiltered(
 
-            @QueryParam("type")
-            Optional<FAILURE_TYPE> type,
+            @QueryParam("type") Optional<FAILURE_TYPE> type,
 
-            @QueryParam("from")
-            Optional<Integer> startYear,
+            @QueryParam("from") Optional<Integer> startYear,
 
-            @QueryParam("to")
-            Optional<Integer> endYear,
+            @QueryParam("to") Optional<Integer> endYear,
 
-            @QueryParam("page") @DefaultValue("1")
-            int page,
+            @QueryParam("page") @DefaultValue("1") int page,
 
-            @QueryParam("size") @DefaultValue("20")
-            int pageSize,
+            @QueryParam("size") @DefaultValue("20") int pageSize,
 
-            @QueryParam("orderby") @DefaultValue("date")
-            String orderBy,
+            @QueryParam("orderby") @DefaultValue("date") String orderBy,
 
-            @QueryParam("ascending") @DefaultValue("false")
-            boolean ascending) {
+            @QueryParam("ascending") @DefaultValue("false") boolean ascending) {
 
-        if (type.isEmpty() && startYear.isEmpty() && endYear.isEmpty() && orderBy.equals("date") && !ascending) {
-            return getFailures(page, pageSize);
-        } else if (type.isPresent() && Arrays.stream(FAILURE_TYPE.values()).noneMatch(ft -> ft == type.get())) {
+        if (type.isPresent() && Arrays.stream(FAILURE_TYPE.values()).noneMatch(ft -> ft == type.get())) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new ExceptionResponse("Tipo de falha inválida. Verifique se este tipo de falha existe."))
                     .build();
@@ -137,21 +127,26 @@ public class FailureResource {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getFailureById(
-            @PathParam("id")
-            UUID id) {
+            @PathParam("id") UUID id) {
 
         try {
-            var failure = REPO.getById(id);
 
-            return Response.ok(
-                    failure
-            ).build();
+            var failureOptional = REPO.getById(id);
+            if (failureOptional.isPresent()) {
 
-        } catch (IllegalArgumentException e) {
-            return Response
-                    .status(Response.Status.NOT_FOUND)
-                    .entity(new ExceptionResponse(e.getMessage()))
-                    .build();
+                return Response.ok(
+                        failureOptional.get()
+                ).build();
+
+            } else {
+
+                return Response
+                        .status(Response.Status.NOT_FOUND)
+                        .entity(new ExceptionResponse("Falha não encontrada. Verifique o ID."))
+                        .build();
+
+            }
+
         } catch (RuntimeException e) {
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -166,24 +161,28 @@ public class FailureResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateFailure(
-
-            @PathParam("id")
-            UUID id,
-
+            @PathParam("id") UUID id,
             Failure newFailure) {
 
         try {
-            var failure = REPO.getById(id);
+
+            var failureOptional = REPO.getById(id);
+            Failure failure;
+            if (failureOptional.isPresent()) {
+                failure = failureOptional.get();
+            } else {
+                return Response
+                        .status(Response.Status.NOT_FOUND)
+                        .entity(new ExceptionResponse("Falha não encontrada. Verifique se o ID está correto."))
+                        .build();
+            }
+
             failure.updateAttributes(newFailure);
             REPO.updateById(id, failure);
             return Response.ok(
                     failure
             ).build();
-        } catch (IllegalArgumentException e) {
-            return Response
-                    .status(Response.Status.NOT_FOUND)
-                    .entity(new ExceptionResponse(e.getMessage()))
-                    .build();
+
         } catch (RuntimeException e) {
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -195,16 +194,17 @@ public class FailureResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addFailure(
-
-            Failure failure) {
+    @RateLimit(value = 100, window = 1)
+    public Response addFailure(Failure failure) {
 
         try {
+
             var failureToAdd = new Failure(failure.getDescription(), failure.getFailureType());
             REPO.add(failureToAdd);
             return Response.ok(
                     failureToAdd
             ).build();
+
         } catch (RuntimeException e) {
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)

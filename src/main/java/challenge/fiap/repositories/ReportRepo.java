@@ -9,6 +9,7 @@ import challenge.fiap.models.Report;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class ReportRepo extends _BaseRepo implements _CrudRepo<Report> {
@@ -70,7 +71,7 @@ public class ReportRepo extends _BaseRepo implements _CrudRepo<Report> {
     }
 
     @Override
-    public Report getById(UUID id) {
+    public Optional<Report> getById(UUID id) {
         return null;
     }
 
@@ -90,7 +91,7 @@ public class ReportRepo extends _BaseRepo implements _CrudRepo<Report> {
     }
 
     @Override
-    public Report getByIdAdmin(UUID id) {
+    public Optional<Report> getByIdAdmin(UUID id) {
         return null;
     }
 

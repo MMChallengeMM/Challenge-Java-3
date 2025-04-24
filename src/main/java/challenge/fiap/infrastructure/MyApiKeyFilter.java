@@ -1,12 +1,12 @@
-package challenge.fiap;
+package challenge.fiap.infrastructure;
 
+import challenge.fiap.dtos.ExceptionResponse;
 import jakarta.annotation.Priority;
 import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
-import org.eclipse.microprofile.config.inject.ConfigProperties;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.io.IOException;
@@ -15,17 +15,17 @@ import java.io.IOException;
 @Priority(Priorities.AUTHENTICATION)
 public class MyApiKeyFilter implements ContainerRequestFilter {
 
-    @ConfigProperty(name= "api.key")
+    @ConfigProperty(name="api.key")
     String apiKey;
 
     @Override
     public void filter(ContainerRequestContext containerRequestContext) throws IOException {
-        var apiKeyRequest = containerRequestContext.getHeaderString("X-API-kay");
+        var apiKeyRequest = containerRequestContext.getHeaderString("X-API-key");
 
         if (apiKeyRequest == null || !apiKeyRequest.equals(this.apiKey)) {
             containerRequestContext.abortWith(
                     Response.status(Response.Status.UNAUTHORIZED)
-                            .entity("Api key missing or invalid")
+                            .entity(new ExceptionResponse("Chave inválida"))
                             .build()
             );
         }

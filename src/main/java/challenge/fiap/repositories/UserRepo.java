@@ -3,6 +3,7 @@ package challenge.fiap.repositories;
 import challenge.fiap.models.User;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class UserRepo extends _BaseRepo implements _CrudRepo<User>{
@@ -17,7 +18,7 @@ public class UserRepo extends _BaseRepo implements _CrudRepo<User>{
     }
 
     @Override
-    public User getById(UUID id) {
+    public Optional<User> getById(UUID id) {
         return null;
     }
 
@@ -37,7 +38,7 @@ public class UserRepo extends _BaseRepo implements _CrudRepo<User>{
     }
 
     @Override
-    public User getByIdAdmin(UUID id) {
+    public Optional<User> getByIdAdmin(UUID id) {
         return null;
     }
 

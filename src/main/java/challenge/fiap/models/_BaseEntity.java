@@ -13,9 +13,7 @@ public abstract class _BaseEntity<T> {
     private UUID id = UUID.randomUUID();
     private boolean deleted = false;
 
-    public abstract String showDetails();
-
-    public abstract T updateAttributes(T object);
+    public abstract void updateAttributes(T object);
 
     public _BaseEntity() {
     }
@@ -45,8 +43,8 @@ public abstract class _BaseEntity<T> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        _BaseEntity that = (_BaseEntity) o;
-        return isDeleted() == that.isDeleted() && Objects.equals(getId(), that.getId());
+        _BaseEntity<?> that = (_BaseEntity<?>) o;
+        return isDeleted() == that.isDeleted() && Objects.equals(LOGGER, that.LOGGER) && Objects.equals(getId(), that.getId());
     }
 
     @Override

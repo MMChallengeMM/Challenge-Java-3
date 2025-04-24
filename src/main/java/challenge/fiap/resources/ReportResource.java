@@ -61,18 +61,25 @@ public class ReportResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getReportsFiltered(
 
+            @QueryParam("text")
             Optional<String> text,
 
+            @QueryParam("type")
             Optional<REPORT_TYPE> type,
 
+            @QueryParam("generationStartYear")
             Optional<Integer> generationStartYear,
 
+            @QueryParam("generationEndYear")
             Optional<Integer> generationEndYear,
 
+            @QueryParam("periodStartYear")
             Optional<Integer> periodStartYear,
 
+            @QueryParam("periodEndYear")
             Optional<Integer> periodEndYear,
 
+            @QueryParam("numberFailures")
             Optional<Integer> numFailures,
 
             @QueryParam("page") @DefaultValue("1")
@@ -81,10 +88,10 @@ public class ReportResource {
             @QueryParam("size") @DefaultValue("20")
             int pageSize,
 
-            @DefaultValue("date")
+            @QueryParam("orderby") @DefaultValue("date")
             String orderBy,
 
-            @DefaultValue("false")
+            @QueryParam("ascending") @DefaultValue("false")
             boolean ascending
     ) {
 
@@ -102,6 +109,13 @@ public class ReportResource {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateById(@PathParam("id") UUID id, Report report) {
+        return null;
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addReport(Report report) {
         return null;
     }
 

@@ -1,4 +1,4 @@
 package challenge.fiap.models;
 
-public abstract class User extends _BaseEntity {
+public abstract class User extends _BaseEntity<User> {
 }

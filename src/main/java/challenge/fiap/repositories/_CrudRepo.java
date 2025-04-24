@@ -1,6 +1,7 @@
 package challenge.fiap.repositories;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface _CrudRepo<T> {
@@ -22,9 +23,9 @@ public interface _CrudRepo<T> {
      * Busca um objeto específico pelo ID no sistema.
      *
      * @param id UUID para encontrar o objeto.
-     * @return Um objeto correspondente, ou null se não encontrado.
+     * @return Optional com o objeto correspondente, ou vazio se não encontrado.
      */
-    T getById(UUID id);
+    Optional<T> getById(UUID id);
 
     /**
      * Busca um objeto pelo ID e atualiza com o novo objeto fornecido.
@@ -53,9 +54,10 @@ public interface _CrudRepo<T> {
     /**
      * Retorna um objeto pelo ID, mesmo que esteja removido logicamente.
      *
-     * @return O objeto correspondente, ou null se não encontrado.
+     * @param id UUID para encontrar o objeto.
+     * @return Optional com o objeto correspondente, ou vazio se não encontrado.
      */
-    T getByIdAdmin(UUID id);
+    Optional<T> getByIdAdmin(UUID id);
 
     /**
      * Remove permanentemente um objeto com base no seu ID.

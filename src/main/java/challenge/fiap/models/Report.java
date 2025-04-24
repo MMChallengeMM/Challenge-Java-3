@@ -19,13 +19,7 @@ public class Report extends _BaseEntity<Report> {
     private final Map<FAILURE_TYPE, Integer> numberOfFailuresByType = new HashMap<>();
 
     @Override
-    public String showDetails() {
-        return toString();
-    }
-
-    @Override
-    public Report updateAttributes(Report object) {
-        return this;
+    public void updateAttributes(Report object) {
     }
 
     public Report() {
