@@ -19,13 +19,14 @@ public class MyApiKeyFilter implements ContainerRequestFilter {
     String apiKey;
 
     @Override
-    public void filter(ContainerRequestContext containerRequestContext) throws IOException {
+    public void filter(ContainerRequestContext containerRequestContext) {
         var apiKeyRequest = containerRequestContext.getHeaderString("X-API-key");
 
         if (apiKeyRequest == null || !apiKeyRequest.equals(this.apiKey)) {
             containerRequestContext.abortWith(
                     Response.status(Response.Status.UNAUTHORIZED)
-                            .entity(new ExceptionResponse("Chave inválida"))
+                            .entity(new ExceptionResponse("Chave da API inválida",
+                                    "Verifique se a chave é válida ou está presente."))
                             .build()
             );
         }

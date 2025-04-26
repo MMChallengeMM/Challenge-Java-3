@@ -31,9 +31,10 @@ public class Failure extends _BaseEntity<Failure> {
     public Failure() {
     }
 
-    public Failure(String description, FAILURE_TYPE failureType) {
-        this.description = description;
+    public Failure(String description, FAILURE_TYPE failureType, LocalDateTime generationDate) {
         this.failureType = failureType;
+        this.generationDate = generationDate;
+        this.description = description;
     }
 
     public String getDescription() {

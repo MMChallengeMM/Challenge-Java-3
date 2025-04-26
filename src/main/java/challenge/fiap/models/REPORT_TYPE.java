@@ -22,4 +22,13 @@ public enum REPORT_TYPE {
         }
         throw new IllegalArgumentException("Número inválido: %d".formatted(num));
     }
+
+    public static REPORT_TYPE fromString(String text) {
+        for (REPORT_TYPE tipo: REPORT_TYPE.values()) {
+            if (tipo.toString().equals(text)) {
+                return tipo;
+            }
+        }
+        throw new IllegalArgumentException("Texto inválido: %s".formatted(text));
+    }
 }

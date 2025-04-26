@@ -9,7 +9,6 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import java.time.Year;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.UUID;
@@ -51,7 +50,8 @@ public class ReportResource {
         } catch (RuntimeException e) {
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ExceptionResponse(e.getMessage()))
+                    .entity(new ExceptionResponse(e.toString(),
+                            e.getMessage()))
                     .build();
         }
     }

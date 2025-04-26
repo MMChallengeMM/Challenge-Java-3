@@ -97,6 +97,7 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
         failure.setFailureType(FAILURE_TYPE.valueOf(result.getString("tipo")));
         failure.setGenerationDate((result.getTimestamp("dt_hr")).toLocalDateTime());
         failure.setOnGeneralReport(result.getBoolean("emRelatorioGeral"));
+
         return failure;
     }
 

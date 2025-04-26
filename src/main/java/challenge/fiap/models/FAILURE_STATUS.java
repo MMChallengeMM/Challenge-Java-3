@@ -23,4 +23,13 @@ public enum FAILURE_STATUS {
         }
         throw new IllegalArgumentException("Número inválido: %d".formatted(num));
     }
+
+    public static FAILURE_STATUS fromString(String text) {
+        for (FAILURE_STATUS tipo: FAILURE_STATUS.values()) {
+            if (tipo.toString().equals(text)) {
+                return tipo;
+            }
+        }
+        throw new IllegalArgumentException("Texto inválido: %s".formatted(text));
+    }
 }
