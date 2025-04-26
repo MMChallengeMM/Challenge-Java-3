@@ -1,7 +1,7 @@
 package challenge.fiap.resources;
 
-import challenge.fiap.dtos.ExceptionResponse;
-import challenge.fiap.dtos.PageResponse;
+import challenge.fiap.dtos.ExceptionDto;
+import challenge.fiap.dtos.PageDto;
 import challenge.fiap.models.REPORT_TYPE;
 import challenge.fiap.models.Report;
 import challenge.fiap.repositories.ReportRepo;
@@ -41,7 +41,7 @@ public class ReportResource {
             var reportsPaginated = reports.subList(start, end);
 
             return Response.ok(
-                    new PageResponse<>(
+                    new PageDto<>(
                             page,
                             pageSize,
                             reports.size(),
@@ -50,7 +50,7 @@ public class ReportResource {
         } catch (RuntimeException e) {
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ExceptionResponse(e.toString(),
+                    .entity(new ExceptionDto(e.toString(),
                             e.getMessage()))
                     .build();
         }

@@ -1,6 +1,6 @@
 package challenge.fiap.dtos;
 
-public record ExceptionResponse(
+public record ExceptionDto(
         String erro,
         String text
 ) {

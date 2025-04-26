@@ -1,8 +1,8 @@
 package challenge.fiap.resources;
 
-import challenge.fiap.dtos.ExceptionResponse;
-import challenge.fiap.dtos.PageResponse;
-import challenge.fiap.dtos.SearchResponse;
+import challenge.fiap.dtos.ExceptionDto;
+import challenge.fiap.dtos.PageDto;
+import challenge.fiap.dtos.SearchDto;
 import challenge.fiap.models.FAILURE_TYPE;
 import challenge.fiap.models.Failure;
 import challenge.fiap.repositories.FailureRepo;
@@ -39,7 +39,7 @@ public class FailureResource {
             var failuresPaginated = failures.subList(start, end);
 
             return Response.ok(
-                    new PageResponse<>(
+                    new PageDto<>(
                             page,
                             pageSize,
                             failures.size(),
@@ -49,7 +49,7 @@ public class FailureResource {
         } catch (RuntimeException e) {
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ExceptionResponse(e.toString(),
+                    .entity(new ExceptionDto(e.toString(),
                             e.getMessage()))
                     .build();
         }
@@ -76,12 +76,12 @@ public class FailureResource {
 
         if (type.isPresent() && Arrays.stream(FAILURE_TYPE.values()).noneMatch(ft -> ft == type.get())) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new ExceptionResponse(new IllegalArgumentException("Tipo de falha inválido").toString(),
+                    .entity(new ExceptionDto(new IllegalArgumentException("Tipo de falha inválido").toString(),
                             "Verifique se este tipo de falha existe."))
                     .build();
         } else if ((startYear.isPresent() && endYear.isPresent()) && (startYear.get() > endYear.get())) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new ExceptionResponse(new IllegalArgumentException("Data inválida").toString(),
+                    .entity(new ExceptionDto(new IllegalArgumentException("Data inválida").toString(),
                             "Ano inicial é maior que ano final."))
                     .build();
         }
@@ -114,8 +114,8 @@ public class FailureResource {
             var failuresPaginated = failures.subList(start, end);
 
             return Response.ok(
-                    new SearchResponse<>(
-                            new PageResponse<>(page, pageSize, failures.size(), failuresPaginated),
+                    new SearchDto<>(
+                            new PageDto<>(page, pageSize, failures.size(), failuresPaginated),
                             filters,
                             orderBy,
                             ascending
@@ -124,7 +124,7 @@ public class FailureResource {
 
         } catch (RuntimeException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ExceptionResponse(e.toString(),
+                    .entity(new ExceptionDto(e.toString(),
                             e.getMessage()))
                     .build();
         }
@@ -149,7 +149,7 @@ public class FailureResource {
 
                 return Response
                         .status(Response.Status.NOT_FOUND)
-                        .entity(new ExceptionResponse(new NoSuchElementException("Falha não encontrada").toString(),
+                        .entity(new ExceptionDto(new NoSuchElementException("Falha não encontrada").toString(),
                                 "Verifique se o ID é válido."))
                         .build();
 
@@ -158,7 +158,7 @@ public class FailureResource {
         } catch (RuntimeException e) {
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ExceptionResponse(e.toString(),
+                    .entity(new ExceptionDto(e.toString(),
                             e.getMessage()))
                     .build();
         }
@@ -181,7 +181,7 @@ public class FailureResource {
             } else {
                 return Response
                         .status(Response.Status.NOT_FOUND)
-                        .entity(new ExceptionResponse(new NoSuchElementException("Falha não encontrada").toString(),
+                        .entity(new ExceptionDto(new NoSuchElementException("Falha não encontrada").toString(),
                                 "Verifique se o ID é válido."))
                         .build();
             }
@@ -195,7 +195,7 @@ public class FailureResource {
         } catch (RuntimeException e) {
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ExceptionResponse(e.toString(),
+                    .entity(new ExceptionDto(e.toString(),
                             e.getMessage()))
                     .build();
         }
@@ -208,7 +208,7 @@ public class FailureResource {
 
         if (!FailureService.createFailureCheck(failure)) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new ExceptionResponse(new IllegalArgumentException("Falha inválida").toString(),
+                    .entity(new ExceptionDto(new IllegalArgumentException("Falha inválida").toString(),
                             "Verifique se os campos 'description' e 'type' estão preenchidos corretamente"))
                     .build();
         }
@@ -222,7 +222,7 @@ public class FailureResource {
         } catch (RuntimeException e) {
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ExceptionResponse(e.toString(),
+                    .entity(new ExceptionDto(e.toString(),
                             e.getMessage()))
                     .build();
         }
