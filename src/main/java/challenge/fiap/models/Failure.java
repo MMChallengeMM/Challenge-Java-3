@@ -1,12 +1,17 @@
 package challenge.fiap.models;
 
+import io.smallrye.common.constraint.NotNull;
+import jakarta.annotation.Nonnull;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Failure extends _BaseEntity<Failure> {
+    @NotNull
     private String description;
     private LocalDateTime generationDate = LocalDateTime.now();
     private boolean onGeneralReport = false;
+    @NotNull
     private FAILURE_TYPE failureType;
     private FAILURE_STATUS failureStatus = FAILURE_STATUS.PENDENTE;
 

@@ -209,7 +209,7 @@ public class FailureResource {
         if (!FailureService.createFailureCheck(failure)) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new ExceptionDto(new IllegalArgumentException("Falha inválida").toString(),
-                            "Verifique se os campos 'description' e 'type' estão preenchidos corretamente"))
+                            "Verifique se o campo 'description' está preenchido corretamente"))
                     .build();
         }
 
