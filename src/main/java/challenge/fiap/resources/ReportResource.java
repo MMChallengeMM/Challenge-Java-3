@@ -3,9 +3,12 @@ package challenge.fiap.resources;
 import challenge.fiap.dtos.ExceptionDto;
 import challenge.fiap.dtos.PageDto;
 import challenge.fiap.dtos.SearchDto;
+import challenge.fiap.models.Failure;
 import challenge.fiap.models.REPORT_TYPE;
 import challenge.fiap.models.Report;
 import challenge.fiap.repositories.ReportRepo;
+import challenge.fiap.service.FailureService;
+import challenge.fiap.service.ReportService;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -178,21 +181,93 @@ public class ReportResource {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getReportById(@PathParam("id") UUID id) {
-        return null;
+        try {
+
+            var reportOptional = REPO.getById(id);
+            if (reportOptional.isPresent()) {
+
+                return Response.ok(
+                        reportOptional.get()
+                ).build();
+
+            } else {
+
+                return Response
+                        .status(Response.Status.NOT_FOUND)
+                        .entity(new ExceptionDto(new NotFoundException("Relatório não encontrado").toString(),
+                                "Verifique se o ID é válido."))
+                        .build();
+
+            }
+
+        } catch (RuntimeException e) {
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ExceptionDto(e.toString(),
+                            e.getMessage()))
+                    .build();
+        }
     }
 
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateById(@PathParam("id") UUID id, Report report) {
-        return null;
+    public Response updateById(@PathParam("id") UUID id, Report newReport) {
+
+        try {
+
+            var reportOptional = REPO.getById(id);
+            Report report;
+            if (reportOptional.isPresent()) {
+                report = reportOptional.get();
+            } else {
+                return Response
+                        .status(Response.Status.NOT_FOUND)
+                        .entity(new ExceptionDto(new NotFoundException("Relatório não encontrado").toString(),
+                                "Verifique se o ID é válido."))
+                        .build();
+            }
+
+            report.updateAttributes(newReport);
+            REPO.updateById(id, report);
+            return Response.ok(
+                    report
+            ).build();
+
+        } catch (RuntimeException e) {
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ExceptionDto(e.toString(),
+                            e.getMessage()))
+                    .build();
+        }
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addReport(Report report) {
-        return null;
+
+        if (!ReportService.createReportCheck(report)) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ExceptionDto(new IllegalArgumentException("Falha inválida").toString(),
+                            "Verifique se o campo 'description' está preenchido corretamente"))
+                    .build();
+        }
+
+        try {
+            REPO.add(report);
+            return Response.ok(
+                    report
+            ).build();
+
+        } catch (RuntimeException e) {
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ExceptionDto(e.toString(),
+                            e.getMessage()))
+                    .build();
+        }
     }
 
 }
