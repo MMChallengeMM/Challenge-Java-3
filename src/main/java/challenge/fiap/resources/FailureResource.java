@@ -14,13 +14,13 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.*;
 
-@RateLimit(window = 1)
 @Path("/falhas")
 public class FailureResource {
 
     private final FailureRepo REPO = new FailureRepo();
 
     @GET
+    @RateLimit(value = 50)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getFailures(
             @QueryParam("page") @DefaultValue("1") int page,
@@ -56,6 +56,7 @@ public class FailureResource {
     }
 
     @GET
+    @RateLimit(value = 300)
     @Path("/search")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getFailuresFiltered(
@@ -77,7 +78,7 @@ public class FailureResource {
         if (type.isPresent() && Arrays.stream(FAILURE_TYPE.values()).noneMatch(ft -> ft == type.get())) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new ExceptionDto(new IllegalArgumentException("Tipo de falha inválido").toString(),
-                            "Verifique se este tipo de falha existe."))
+                            "Verifique se este tipo de falha está digitado corretamente ou existe."))
                     .build();
         } else if ((startYear.isPresent() && endYear.isPresent()) && (startYear.get() > endYear.get())) {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -131,6 +132,7 @@ public class FailureResource {
     }
 
     @GET
+    @RateLimit
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getFailureById(
@@ -149,7 +151,7 @@ public class FailureResource {
 
                 return Response
                         .status(Response.Status.NOT_FOUND)
-                        .entity(new ExceptionDto(new NoSuchElementException("Falha não encontrada").toString(),
+                        .entity(new ExceptionDto(new NotFoundException("Falha não encontrada").toString(),
                                 "Verifique se o ID é válido."))
                         .build();
 
@@ -165,6 +167,7 @@ public class FailureResource {
     }
 
     @PUT
+    @RateLimit(value = 50)
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -181,7 +184,7 @@ public class FailureResource {
             } else {
                 return Response
                         .status(Response.Status.NOT_FOUND)
-                        .entity(new ExceptionDto(new NoSuchElementException("Falha não encontrada").toString(),
+                        .entity(new ExceptionDto(new NotFoundException("Falha não encontrada").toString(),
                                 "Verifique se o ID é válido."))
                         .build();
             }
@@ -202,6 +205,7 @@ public class FailureResource {
     }
 
     @POST
+    @RateLimit(value = 50)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addFailure(Failure failure) {

@@ -2,6 +2,7 @@ package challenge.fiap.resources;
 
 import challenge.fiap.dtos.ExceptionDto;
 import challenge.fiap.dtos.PageDto;
+import challenge.fiap.dtos.SearchDto;
 import challenge.fiap.models.REPORT_TYPE;
 import challenge.fiap.models.Report;
 import challenge.fiap.repositories.ReportRepo;
@@ -9,9 +10,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import java.util.Comparator;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Path("/relatorios")
 public class ReportResource {
@@ -67,19 +66,19 @@ public class ReportResource {
             @QueryParam("type")
             Optional<REPORT_TYPE> type,
 
-            @QueryParam("generationStartYear")
+            @QueryParam("generationFrom")
             Optional<Integer> generationStartYear,
 
-            @QueryParam("generationEndYear")
+            @QueryParam("generationTo")
             Optional<Integer> generationEndYear,
 
-            @QueryParam("periodStartYear")
+            @QueryParam("periodFrom")
             Optional<Integer> periodStartYear,
 
-            @QueryParam("periodEndYear")
+            @QueryParam("periodTo")
             Optional<Integer> periodEndYear,
 
-            @QueryParam("numberFailures")
+            @QueryParam("failuresOnUpTo")
             Optional<Integer> numFailures,
 
             @QueryParam("page") @DefaultValue("1")
@@ -95,7 +94,84 @@ public class ReportResource {
             boolean ascending
     ) {
 
-        return null;
+        if (text.isPresent() && text.get().isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ExceptionDto(new NullPointerException("Texto inválido").toString(),
+                            "Insira um texto válido."))
+                    .build();
+        } else if (type.isPresent() && Arrays.stream(REPORT_TYPE.values()).noneMatch(ft -> ft == type.get())) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ExceptionDto(new IllegalArgumentException("Tipo de relatório inválido").toString(),
+                            "Verifique se este tipo de relatório está digitado corretamente ou existe."))
+                    .build();
+        } else if ((generationStartYear.isPresent() && generationEndYear.isPresent()) && generationStartYear.get() > generationEndYear.get()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ExceptionDto(new IllegalArgumentException("Data inválida").toString(),
+                            "Ano inicial de geração é maior que ano final."))
+                    .build();
+        } else if ((periodStartYear.isPresent() && periodEndYear.isPresent()) && periodStartYear.get() > periodEndYear.get()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ExceptionDto(new IllegalArgumentException("Data inválida").toString(),
+                            "Ano inicial do periodo é maior que ano final."))
+                    .build();
+        } else if (numFailures.isPresent() && numFailures.get() <= 0) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ExceptionDto(new IllegalArgumentException("Número de falhas inválido").toString(),
+                            "Insira um número maior que '0'"))
+                    .build();
+        }
+
+        page = page <= 0 ? 1 : page;
+        try {
+            var filters = new HashMap<String, Object>();
+            text.ifPresent(t -> filters.put("termo", t));
+            type.ifPresent(rt -> filters.put("falhaTipo", rt));
+            generationStartYear.ifPresent(gsy -> filters.put("geracaoAnoInicial", gsy));
+            generationEndYear.ifPresent(gey -> filters.put("geracaoAnoFinal", gey));
+            periodStartYear.ifPresent(psy -> filters.put("anoInicial", psy));
+            periodEndYear.ifPresent(pey -> filters.put("anoFinal", pey));
+            numFailures.ifPresent(nf -> filters.put("maximoFalhasNoRelatorio", nf));
+
+            var reports = REPO.get().stream()
+                    .filter(r ->
+                            (text.isEmpty() || (r.getTitle().contains(text.get()) || r.getInfo().contains(text.get()))) &&
+                                    (type.isEmpty() || r.getReportType().equals(type.get())) &&
+                                    (generationStartYear.isEmpty() || r.getGenerationDate().getYear() >= generationStartYear.get()) &&
+                                    (generationEndYear.isEmpty() || r.getGenerationDate().getYear() <= generationEndYear.get()) &&
+                                    (periodStartYear.isEmpty() || r.getPeriod().getInicialDate().getYear() >= periodStartYear.get()) &&
+                                    (periodEndYear.isEmpty() || r.getPeriod().getFinalDate().getYear() <= periodEndYear.get()) &&
+                                    (numFailures.isEmpty() || r.getTotalNumberOfFailures() <= numFailures.get())
+                    ).sorted(ascending ?
+                            orderBy.equals("date") ?
+                                    Comparator.comparing(Report::getGenerationDate) :
+                                    Comparator.comparing(Report::getTitle).thenComparing(Report::getInfo)
+                            :
+                            orderBy.equals("date") ?
+                                    Comparator.comparing(Report::getGenerationDate).reversed() :
+                                    Comparator.comparing(Report::getTitle).thenComparing(Report::getInfo).reversed()
+                    ).toList();
+
+            var start = (page - 1) * pageSize;
+            var end = Math.min(reports.size(), start + pageSize);
+
+            var failuresPaginated = reports.subList(start, end);
+
+            return Response.ok(
+                    new SearchDto<>(
+                            new PageDto<>(page, pageSize, reports.size(), failuresPaginated),
+                            filters,
+                            orderBy,
+                            ascending
+                    )
+            ).build();
+
+        } catch (RuntimeException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ExceptionDto(e.toString(),
+                            e.getMessage()))
+                    .build();
+        }
+
     }
 
     @GET
