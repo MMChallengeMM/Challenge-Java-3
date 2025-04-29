@@ -1,8 +1,5 @@
 package challenge.fiap;
 
-import challenge.fiap.models.FAILURE_TYPE;
-import challenge.fiap.models.Failure;
-import challenge.fiap.models.REPORT_TYPE;
 import challenge.fiap.models.Report;
 import challenge.fiap.repositories.FailureRepo;
 
@@ -26,9 +23,9 @@ public class Test {
 //        repo.add(new Failure("Problema na configuração do balanceamento de carga", FAILURE_TYPE.OUTRO));
 
 
-        var relatorio = new Report("Crro","bolo", REPORT_TYPE.GERAL);
+        var relatorio = new Report();
 
-        System.out.println(relatorio.generateData());
+//        System.out.println(relatorio.generateData());
         System.out.println(repo.get());
     }
 }

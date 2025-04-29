@@ -3,11 +3,9 @@ package challenge.fiap.resources;
 import challenge.fiap.dtos.ExceptionDto;
 import challenge.fiap.dtos.PageDto;
 import challenge.fiap.dtos.SearchDto;
-import challenge.fiap.models.Failure;
 import challenge.fiap.models.REPORT_TYPE;
 import challenge.fiap.models.Report;
 import challenge.fiap.repositories.ReportRepo;
-import challenge.fiap.service.FailureService;
 import challenge.fiap.service.ReportService;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -141,8 +139,8 @@ public class ReportResource {
                                     (type.isEmpty() || r.getReportType().equals(type.get())) &&
                                     (generationStartYear.isEmpty() || r.getGenerationDate().getYear() >= generationStartYear.get()) &&
                                     (generationEndYear.isEmpty() || r.getGenerationDate().getYear() <= generationEndYear.get()) &&
-                                    (periodStartYear.isEmpty() || r.getPeriod().getInicialDate().getYear() >= periodStartYear.get()) &&
-                                    (periodEndYear.isEmpty() || r.getPeriod().getFinalDate().getYear() <= periodEndYear.get()) &&
+                                    (periodStartYear.isEmpty() || r.getPeriodInicialDate().getYear() >= periodStartYear.get()) &&
+                                    (periodEndYear.isEmpty() || r.getPeriodFinalDate().getYear() <= periodEndYear.get()) &&
                                     (numFailures.isEmpty() || r.getTotalNumberOfFailures() <= numFailures.get())
                     ).sorted(ascending ?
                             orderBy.equals("date") ?
@@ -250,8 +248,8 @@ public class ReportResource {
 
         if (!ReportService.createReportCheck(report)) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new ExceptionDto(new IllegalArgumentException("Falha inválida").toString(),
-                            "Verifique se o campo 'description' está preenchido corretamente"))
+                    .entity(new ExceptionDto(new IllegalArgumentException("Relatório inválido").toString(),
+                            "Verifique se os campos necessário estão preenchido corretamente"))
                     .build();
         }
 

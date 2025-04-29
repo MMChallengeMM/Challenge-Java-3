@@ -45,8 +45,8 @@ public class ReportRepo extends _BaseRepo implements _CrudRepo<Report> {
             stmt.setString(3, object.getInfo());
             stmt.setTimestamp(4, Timestamp.valueOf(object.getGenerationDate()));
             stmt.setString(5, object.getReportType().toString());
-            stmt.setTimestamp(6, object.getReportType() == REPORT_TYPE.GERAL ? null : Timestamp.valueOf(object.getPeriod().getInicialDate()));
-            stmt.setTimestamp(7, object.getReportType() == REPORT_TYPE.GERAL ? null : Timestamp.valueOf(object.getPeriod().getFinalDate()));
+            stmt.setTimestamp(6, object.getReportType() == REPORT_TYPE.GERAL ? null : Timestamp.valueOf(object.getPeriodInicialDate()));
+            stmt.setTimestamp(7, object.getReportType() == REPORT_TYPE.GERAL ? null : Timestamp.valueOf(object.getPeriodFinalDate()));
             stmt.setInt(8, object.getTotalNumberOfFailures());
             stmt.setInt(9, object.getNumberOfFailuresByStatus().get(FAILURE_STATUS.PENDENTE));
             stmt.setInt(10, object.getNumberOfFailuresByStatus().get(FAILURE_STATUS.CANCELADA));
@@ -72,7 +72,7 @@ public class ReportRepo extends _BaseRepo implements _CrudRepo<Report> {
 
     @Override
     public Optional<Report> getById(UUID id) {
-        return null;
+        return Optional.empty();
     }
 
     @Override
@@ -92,7 +92,7 @@ public class ReportRepo extends _BaseRepo implements _CrudRepo<Report> {
 
     @Override
     public Optional<Report> getByIdAdmin(UUID id) {
-        return null;
+        return Optional.empty();
     }
 
     @Override

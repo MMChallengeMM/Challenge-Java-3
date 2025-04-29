@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Failure extends _BaseEntity<Failure> {
-    private String description;
+    private String description = null;
     private LocalDateTime generationDate = LocalDateTime.now();
     private boolean onGeneralReport = false;
     private FAILURE_TYPE failureType;

@@ -1,19 +1,17 @@
 package challenge.fiap.models;
 
-import challenge.fiap.repositories.FailureRepo;
-
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class Report extends _BaseEntity<Report> {
     private String title;
-    private String info;
+    private String info = null;
     private final LocalDateTime generationDate = LocalDateTime.now();
     private REPORT_TYPE reportType;
-    private Period period = null;
+    private LocalDateTime periodInicialDate = null;
+    private LocalDateTime periodFinalDate = null;
     private int totalNumberOfFailures;
     private final Map<FAILURE_STATUS, Integer> numberOfFailuresByStatus = new HashMap<>();
     private final Map<FAILURE_TYPE, Integer> numberOfFailuresByType = new HashMap<>();
@@ -23,95 +21,6 @@ public class Report extends _BaseEntity<Report> {
     }
 
     public Report() {
-        numberOfFailuresByStatus.put(FAILURE_STATUS.PENDENTE, null);
-        numberOfFailuresByStatus.put(FAILURE_STATUS.CANCELADA, null);
-        numberOfFailuresByStatus.put(FAILURE_STATUS.CONCLUIDA, null);
-
-        numberOfFailuresByType.put(FAILURE_TYPE.MECANICA, null);
-        numberOfFailuresByType.put(FAILURE_TYPE.ELETRICA, null);
-        numberOfFailuresByType.put(FAILURE_TYPE.SOFTWARE, null);
-        numberOfFailuresByType.put(FAILURE_TYPE.OUTRO, null);
-    }
-
-    public Report(String title, String info, REPORT_TYPE reportType) {
-        this.title = title;
-        this.info = info;
-        this.reportType = reportType;
-
-        numberOfFailuresByStatus.put(FAILURE_STATUS.PENDENTE, null);
-        numberOfFailuresByStatus.put(FAILURE_STATUS.CANCELADA, null);
-        numberOfFailuresByStatus.put(FAILURE_STATUS.CONCLUIDA, null);
-
-        numberOfFailuresByType.put(FAILURE_TYPE.MECANICA, null);
-        numberOfFailuresByType.put(FAILURE_TYPE.ELETRICA, null);
-        numberOfFailuresByType.put(FAILURE_TYPE.SOFTWARE, null);
-        numberOfFailuresByType.put(FAILURE_TYPE.OUTRO, null);
-    }
-
-    /**
-     * Gera os dados do relatório e retorna o relatório completo.
-     * @return O Relatório completo
-     */
-    public Report generateData() {
-        // TODO: Fazer a lógica de gerar dados.
-
-        var repo = new FailureRepo();
-
-        var failures = repo.get();
-
-        switch (reportType) {
-            case GERAL:
-                failures = failures.stream()
-                        .filter(f -> !f.isOnGeneralReport())
-                                .toList();
-                repo.switchOnGeneralReport(failures);
-
-                totalNumberOfFailures = failures.size();
-
-                var failureTypes = failures.stream()
-                        .map(Failure::getFailureType)
-                        .toList();
-
-                for (var failureType : failureTypes) {
-                    numberOfFailuresByType.put(failureType, failures.stream()
-                            .collect(Collectors.groupingBy(Failure::getFailureType, Collectors.counting())).get(failureType).intValue()
-                    );
-                }
-
-                if (numberOfFailuresByType.containsValue(null)) {
-                    numberOfFailuresByType.forEach((k,v) -> {
-                        if (v == null) {
-                            numberOfFailuresByType.put(k, 0);
-                        }
-                    });
-                }
-
-                var failureStatuses = failures.stream()
-                        .map(Failure::getFailureStatus)
-                        .toList();
-
-                for (var failureStatus : failureStatuses) {
-                    numberOfFailuresByStatus.put(failureStatus, failures.stream()
-                            .collect(Collectors.groupingBy(Failure::getFailureStatus, Collectors.counting())).get(failureStatus).intValue()
-                    );
-                }
-
-                if (numberOfFailuresByStatus.containsValue(null)) {
-                    numberOfFailuresByStatus.forEach((k,v) -> {
-                        if (v == null) {
-                            numberOfFailuresByStatus.put(k, 0);
-                        }
-                    });
-                }
-
-                break;
-            case PERIODO:
-                this.period = new Period();
-
-                break;
-        }
-
-        return this;
     }
 
     public String getTitle() {
@@ -126,8 +35,28 @@ public class Report extends _BaseEntity<Report> {
         return info;
     }
 
-    public Period getPeriod() {
-        return period;
+    public void setReportType(REPORT_TYPE reportType) {
+        this.reportType = reportType;
+    }
+
+    public LocalDateTime getPeriodInicialDate() {
+        return periodInicialDate;
+    }
+
+    public void setPeriodInicialDate(LocalDateTime periodInicialDate) {
+        this.periodInicialDate = periodInicialDate;
+    }
+
+    public LocalDateTime getPeriodFinalDate() {
+        return periodFinalDate;
+    }
+
+    public void setPeriodFinalDate(LocalDateTime periodFinalDate) {
+        this.periodFinalDate = periodFinalDate;
+    }
+
+    public void setTotalNumberOfFailures(int totalNumberOfFailures) {
+        this.totalNumberOfFailures = totalNumberOfFailures;
     }
 
     public void setInfo(String info) {
@@ -189,7 +118,6 @@ public class Report extends _BaseEntity<Report> {
                 ", info='" + info + '\'' +
                 ", reportType=" + reportType +
                 ", generationDate=" + generationDate +
-                ", period=" + period +
                 ", totalNumberOfFailures=" + totalNumberOfFailures +
                 ", numberOfFailuresByStatus=" + numberOfFailuresByStatus +
                 ", numberOfFailuresByType=" + numberOfFailuresByType +

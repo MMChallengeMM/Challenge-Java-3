@@ -16,15 +16,15 @@ public class ReportService {
             return false;
         }
 
-        if (report.getReportType() == REPORT_TYPE.PERIODO && report.getPeriod() == null) {
+        if (report.getReportType() == REPORT_TYPE.PERIODO && (report.getPeriodInicialDate() == null || report.getPeriodFinalDate() == null)) {
             return false;
         }
 
-        if (report.getReportType() != REPORT_TYPE.PERIODO && report.getPeriod() != null) {
+        if (report.getReportType() != REPORT_TYPE.PERIODO && (report.getPeriodInicialDate() != null || report.getPeriodFinalDate() != null)) {
             return false;
         }
 
-        if (report.getTotalNumberOfFailures() < 0 ) {
+        if (report.getTotalNumberOfFailures() < 0 || report.getNumberOfFailuresByStatus().values().stream().anyMatch(n -> n < 0) || report.getNumberOfFailuresByType().values().stream().anyMatch(n -> n < 0)) {
             return false;
         }
 
