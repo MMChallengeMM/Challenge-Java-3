@@ -14,7 +14,15 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
     @Override
     public void add(Failure object) {
 
-        var query = "INSERT INTO TB_FALHAS ( id, desc_falha, status, tipo, dt_hr, deleted, emRelatorioGeral) VALUES (?, ?, ?, ?, ?, 0, ?)";
+        var query = "INSERT INTO TB_FALHAS (" +
+                "id," +
+                "desc_falha," +
+                "status," +
+                "tipo," +
+                "dt_hr," +
+                "deleted," +
+                "emRelatorioGeral)" +
+                " VALUES (?, ?, ?, ?, ?, 0, ?)";
 
         LOGGER.info("Criando falha: {}", object.getId());
 
@@ -87,19 +95,6 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
         }
     }
 
-    private Failure createFailure(ResultSet result) throws SQLException {
-        var failure = new Failure();
-        failure.setId(UUID.fromString(result.getString("id")));
-        failure.setDeleted(result.getBoolean("deleted"));
-
-        failure.setDescription(result.getString("desc_falha"));
-        failure.setFailureStatus(FAILURE_STATUS.valueOf(result.getString("status")));
-        failure.setFailureType(FAILURE_TYPE.valueOf(result.getString("tipo")));
-        failure.setGenerationDate((result.getTimestamp("dt_hr")).toLocalDateTime());
-        failure.setOnGeneralReport(result.getBoolean("emRelatorioGeral"));
-
-        return failure;
-    }
 
     @Override
     public void updateById(UUID id, Failure object) {
@@ -240,20 +235,17 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
         updateById(idOld, newObject);
     }
 
-    public void switchOnGeneralReport(List<Failure> failures) {
-        var query = "UPDATE TB_FALHAS SET emRelatorioGeral = ? WHERE id = ?";
+    private Failure createFailure(ResultSet result) throws SQLException {
+        var failure = new Failure();
+        failure.setId(UUID.fromString(result.getString("id")));
+        failure.setDeleted(result.getBoolean("deleted"));
 
-        try (var connection = DatabaseConfig.getConnection()) {
-            for (var f: failures) {
-                var stmt = connection.prepareStatement(query);
-                f.setOnGeneralReport(!f.isOnGeneralReport());
-                stmt.setBoolean(1, f.isOnGeneralReport());
-                stmt.setString(2, f.getId().toString());
-                stmt.executeUpdate();
-            }
-        } catch (SQLException e) {
-            LOGGER.error("Erro ao atualizar falhas: 'emRelatorioGeral'");
-            throw new RuntimeException("Erro ao atualizar falhas em sequência: 'emRelatorioGeral'");
-        }
+        failure.setDescription(result.getString("desc_falha"));
+        failure.setFailureStatus(FAILURE_STATUS.valueOf(result.getString("status")));
+        failure.setFailureType(FAILURE_TYPE.valueOf(result.getString("tipo")));
+        failure.setGenerationDate((result.getTimestamp("dt_hr")).toLocalDateTime());
+        failure.setOnGeneralReport(result.getBoolean("emRelatorioGeral"));
+
+        return failure;
     }
 }
