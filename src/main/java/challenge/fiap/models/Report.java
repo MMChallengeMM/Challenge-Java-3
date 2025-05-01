@@ -16,10 +16,6 @@ public class Report extends _BaseEntity<Report> {
     private final Map<FAILURE_STATUS, Integer> numberOfFailuresByStatus = new HashMap<>();
     private final Map<FAILURE_TYPE, Integer> numberOfFailuresByType = new HashMap<>();
 
-    @Override
-    public void updateAttributes(Report object) {
-    }
-
     public Report() {
     }
 
@@ -81,20 +77,6 @@ public class Report extends _BaseEntity<Report> {
 
     public Map<FAILURE_TYPE, Integer> getNumberOfFailuresByType() {
         return numberOfFailuresByType;
-    }
-
-    public void setNumberOfFailuresByStatus(FAILURE_STATUS chave, int valor) {
-        if (!numberOfFailuresByStatus.containsKey(chave)) {
-            throw new IllegalArgumentException("Chave não permitida: " + chave);
-        }
-        numberOfFailuresByStatus.put(chave, valor);
-    }
-
-    public void setNumberOfFailuresByType(FAILURE_TYPE chave, int valor) {
-        if (!numberOfFailuresByType.containsKey(chave)) {
-            throw new IllegalArgumentException("Chave não permitida: " + chave);
-        }
-        numberOfFailuresByType.put(chave, valor);
     }
 
     @Override

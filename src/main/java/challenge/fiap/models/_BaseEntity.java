@@ -13,14 +13,24 @@ public abstract class _BaseEntity<T> {
     private UUID id = UUID.randomUUID();
     private boolean deleted = false;
 
-    public abstract void updateAttributes(T object);
-
-    public _BaseEntity() {
+    public void updateAttributes(T object) {
+        try {
+            for (var field : object.getClass().getDeclaredFields()) {
+                if (field.getName().equals("id")) {
+                    continue;
+                }
+                field.setAccessible(true);
+                var newValue = field.get(object);
+                if (newValue != null) {
+                    field.set(this,newValue);
+                }
+            }
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("Erro ao atualizar atributos");
+        }
     }
 
-    public _BaseEntity(UUID id, boolean deleted) {
-        this.id = id;
-        this.deleted = deleted;
+    public _BaseEntity() {
     }
 
     public UUID getId() {

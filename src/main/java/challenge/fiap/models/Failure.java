@@ -10,31 +10,7 @@ public class Failure extends _BaseEntity<Failure> {
     private FAILURE_TYPE failureType;
     private FAILURE_STATUS failureStatus = FAILURE_STATUS.PENDENTE;
 
-    @Override
-    public void updateAttributes(Failure object) {
-        try {
-            for (var field : Failure.class.getDeclaredFields()) {
-                if (field.getName().equals("id")) {
-                    continue;
-                }
-                field.setAccessible(true);
-                var newValue = field.get(object);
-                if (newValue != null) {
-                    field.set(this,newValue);
-                }
-            }
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("Erro ao atualizar atributos");
-        }
-    }
-
     public Failure() {
-    }
-
-    public Failure(String description, FAILURE_TYPE failureType, LocalDateTime generationDate) {
-        this.failureType = failureType;
-        this.generationDate = generationDate;
-        this.description = description;
     }
 
     public String getDescription() {

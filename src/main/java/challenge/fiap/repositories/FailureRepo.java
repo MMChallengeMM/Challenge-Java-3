@@ -8,7 +8,10 @@ import challenge.fiap.models.Failure;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
     @Override
