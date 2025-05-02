@@ -8,6 +8,7 @@ import challenge.fiap.models.Admin;
 import challenge.fiap.models.Operator;
 import challenge.fiap.models.User;
 import challenge.fiap.repositories.UserRepo;
+import challenge.fiap.service.UserService;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -15,6 +16,7 @@ import jakarta.ws.rs.core.Response;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.UUID;
 
 @Path("/users")
 public class UserResource {
@@ -122,10 +124,8 @@ public class UserResource {
                     .filter(u ->
                             (username.isEmpty() || u.getUsername().contains(username.get())) &&
                                     (email.isEmpty() || u.getEmail().contains(email.get())) &&
-                                    (sector.isEmpty() || (u instanceof Operator &&
-                                            ((Operator) u).getSector().contains(sector.get()))) &&
-                                    (accessLevel.isEmpty() || (u instanceof Admin &&
-                                            ((Admin) u).getAcessLevel() <= accessLevel.get()))
+                                    ((sector.isEmpty() || (u instanceof Operator && ((Operator) u).getSector().contains(sector.get()))) ||
+                                            (accessLevel.isEmpty() || (u instanceof Admin && ((Admin) u).getAcessLevel() <= accessLevel.get())))
                     ).sorted(ascending ?
                             orderBy.equals("name") ?
                                     Comparator.comparing(User::getUsername) :
@@ -166,4 +166,98 @@ public class UserResource {
                     .build();
         }
     }
+
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserById(@PathParam("id") UUID id) {
+        try {
+
+            var userOptional = REPO.getById(id);
+            if (userOptional.isPresent()) {
+
+                return Response.ok(
+                        userOptional.get()
+                ).build();
+
+            } else {
+
+                return Response
+                        .status(Response.Status.NOT_FOUND)
+                        .entity(new ExceptionDto(new NotFoundException("Usuário não encontrado").toString(),
+                                "Verifique se o ID é válido."))
+                        .build();
+
+            }
+
+        } catch (RuntimeException e) {
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ExceptionDto(e.toString(),
+                            e.getMessage()))
+                    .build();
+        }
+    }
+
+    @PUT
+    @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateById(@PathParam("id") UUID id, User newUser) {
+
+        try {
+
+            var userOptional = REPO.getById(id);
+            User user;
+            if (userOptional.isPresent()) {
+                user = userOptional.get();
+            } else {
+                return Response
+                        .status(Response.Status.NOT_FOUND)
+                        .entity(new ExceptionDto(new NotFoundException("Usuário não encontrado").toString(),
+                                "Verifique se o ID é válido."))
+                        .build();
+            }
+
+            user.updateAttributes(newUser);
+            REPO.updateById(id, user);
+            return Response.ok(
+                    user
+            ).build();
+
+        } catch (RuntimeException e) {
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ExceptionDto(e.toString(),
+                            e.getMessage()))
+                    .build();
+        }
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addUser(User user) {
+
+        if (!UserService.createUserCheck(user)) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ExceptionDto(new IllegalArgumentException("Usuário inválido").toString(),
+                            "Verifique se os campos necessários estão preenchido corretamente"))
+                    .build();
+        }
+
+        try {
+            REPO.add(user);
+            return Response.ok(
+                    user
+            ).build();
+
+        } catch (RuntimeException e) {
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ExceptionDto(e.toString(),
+                            e.getMessage()))
+                    .build();
+        }
+    }
+
 }
