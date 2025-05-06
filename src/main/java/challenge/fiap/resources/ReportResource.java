@@ -7,6 +7,7 @@ import challenge.fiap.models.REPORT_TYPE;
 import challenge.fiap.models.Report;
 import challenge.fiap.repositories.ReportRepo;
 import challenge.fiap.service.ReportService;
+import io.smallrye.faulttolerance.api.RateLimit;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -19,6 +20,7 @@ public class ReportResource {
     private final ReportRepo REPO = new ReportRepo();
 
     @GET
+    @RateLimit(value=50)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getReports(
 
@@ -57,6 +59,7 @@ public class ReportResource {
     }
 
     @GET
+    @RateLimit(value = 300)
     @Path("/search")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getReportsFiltered(
@@ -176,6 +179,7 @@ public class ReportResource {
     }
 
     @GET
+    @RateLimit
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getReportById(@PathParam("id") UUID id) {
@@ -208,6 +212,7 @@ public class ReportResource {
     }
 
     @PUT
+    @RateLimit(value = 50)
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateById(@PathParam("id") UUID id, Report newReport) {
@@ -242,6 +247,7 @@ public class ReportResource {
     }
 
     @POST
+    @RateLimit(value = 50)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addReport(Report report) {

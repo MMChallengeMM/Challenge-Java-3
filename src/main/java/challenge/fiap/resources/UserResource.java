@@ -9,6 +9,7 @@ import challenge.fiap.models.Operator;
 import challenge.fiap.models.User;
 import challenge.fiap.repositories.UserRepo;
 import challenge.fiap.service.UserService;
+import io.smallrye.faulttolerance.api.RateLimit;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -24,6 +25,7 @@ public class UserResource {
     private final UserRepo REPO = new UserRepo();
 
     @GET
+    @RateLimit(value=50)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUsers(
             @QueryParam("page") @DefaultValue("1")
@@ -70,6 +72,7 @@ public class UserResource {
     }
 
     @GET
+    @RateLimit(value=300)
     @Path("/search")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUsersFiltered(
@@ -168,6 +171,7 @@ public class UserResource {
     }
 
     @GET
+    @RateLimit
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserById(@PathParam("id") UUID id) {
@@ -200,6 +204,7 @@ public class UserResource {
     }
 
     @PUT
+    @RateLimit(value = 50)
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateById(@PathParam("id") UUID id, User newUser) {
@@ -234,6 +239,7 @@ public class UserResource {
     }
 
     @POST
+    @RateLimit(value = 50)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addUser(User user) {

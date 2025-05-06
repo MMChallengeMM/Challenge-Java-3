@@ -1,11 +1,10 @@
 package challenge.fiap;
 
-import challenge.fiap.models.Report;
 import challenge.fiap.repositories.FailureRepo;
 
 public class Test {
     public static void main(String[] args) {
-        var repo = new FailureRepo();
+//        var repo = new FailureRepo();
 //        repo.add(new Failure("Queimou um fio", FAILURE_TYPE.ELETRICA));
 //        repo.add(new Failure("Curto-circuito no painel de controle", FAILURE_TYPE.ELETRICA));
 //        repo.add(new Failure("Falha no motor do ventilador", FAILURE_TYPE.MECANICA));
@@ -23,9 +22,7 @@ public class Test {
 //        repo.add(new Failure("Problema na configuração do balanceamento de carga", FAILURE_TYPE.OUTRO));
 
 
-        var relatorio = new Report();
+//        System.out.println(repo.getById(UUID.randomUUID()).orElse(new Failure()));
 
-//        System.out.println(relatorio.generateData());
-        System.out.println(repo.get());
     }
 }

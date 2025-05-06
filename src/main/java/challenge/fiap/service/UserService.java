@@ -10,7 +10,7 @@ public class UserService {
         return user.getUsername() != null &&
                 user.getEmail() != null &&
                 user.getPassword() != null &&
-                ((!(user instanceof Admin) || ((Admin) user).getAcessLevel() > 0) &&
+                ((!(user instanceof Admin) || ((Admin) user).getAcessLevel() >= 0) &&
                         (!(user instanceof Operator) || ((Operator) user).getSector() != null));
     }
 

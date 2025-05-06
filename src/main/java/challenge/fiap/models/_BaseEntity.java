@@ -1,14 +1,9 @@
 package challenge.fiap.models;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.util.Objects;
 import java.util.UUID;
 
 public abstract class _BaseEntity<T> {
-
-    protected Logger LOGGER = LogManager.getLogger(getClass());
 
     private UUID id = UUID.randomUUID();
     private boolean deleted = false;
@@ -51,10 +46,9 @@ public abstract class _BaseEntity<T> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         _BaseEntity<?> that = (_BaseEntity<?>) o;
-        return isDeleted() == that.isDeleted() && Objects.equals(LOGGER, that.LOGGER) && Objects.equals(getId(), that.getId());
+        return isDeleted() == that.isDeleted() && Objects.equals(getId(), that.getId());
     }
 
     @Override
