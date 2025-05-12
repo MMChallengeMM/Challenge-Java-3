@@ -1,66 +1,175 @@
-# mmobilidade.1tdspb
+# Documentação da API
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+## **UserResource**
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+### **Base Path:** `/users/`
 
-## Running the application in dev mode
+#### **1. GET `/users/`**
+- **Descrição:** Retorna uma lista paginada de usuários.
+- **Parâmetros de Query:**
+  - `page` (opcional, padrão: 1): Número da página.
+  - `size` (opcional, padrão: 20): Tamanho da página.
+- **Resposta:**
+  - **Status 200:** Retorna um objeto contendo os usuários.
+  - **Status 500:** Erro interno do servidor.
 
-You can run your application in dev mode that enables live coding using:
+#### **2. GET `/users/search`**
+- **Descrição:** Retorna uma lista paginada de usuários filtrados.
+- **Parâmetros de Query:**
+  - `name` (opcional): Nome do usuário.
+  - `email` (opcional): Email do usuário.
+  - `access` (opcional): Nível de acesso (somente para Admins).
+  - `sector` (opcional): Setor (somente para Operadores).
+  - `page` (opcional, padrão: 1): Número da página.
+  - `size` (opcional, padrão: 20): Tamanho da página.
+  - `orderby` (opcional, padrão: `name`): Campo de ordenação (`name` ou `email`).
+  - `ascending` (opcional, padrão: `false`): Ordenação crescente ou decrescente.
+- **Resposta:**
+  - **Status 200:** Retorna os usuários filtrados.
+  - **Status 400:** Parâmetros inválidos.
+  - **Status 500:** Erro interno do servidor.
 
-```shell script
-./mvnw quarkus:dev
-```
+#### **3. GET `/users/{id}`**
+- **Descrição:** Retorna um usuário pelo ID.
+- **Parâmetros de Path:**
+  - `id` (obrigatório): ID do usuário.
+- **Resposta:**
+  - **Status 200:** Retorna o usuário.
+  - **Status 404:** Usuário não encontrado.
+  - **Status 500:** Erro interno do servidor.
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+#### **4. PUT `/users/{id}`**
+- **Descrição:** Atualiza um usuário pelo ID.
+- **Parâmetros de Path:**
+  - `id` (obrigatório): ID do usuário.
+- **Body:** Objeto JSON representando o novo estado do usuário.
+- **Resposta:**
+  - **Status 200:** Retorna o usuário atualizado.
+  - **Status 404:** Usuário não encontrado.
+  - **Status 500:** Erro interno do servidor.
 
-## Packaging and running the application
+#### **5. POST `/users/`**
+- **Descrição:** Adiciona um novo usuário.
+- **Body:** Objeto JSON representando o usuário a ser criado.
+- **Resposta:**
+  - **Status 200:** Retorna o usuário criado.
+  - **Status 400:** Dados inválidos.
+  - **Status 500:** Erro interno do servidor.
 
-The application can be packaged using:
+---
 
-```shell script
-./mvnw package
-```
+## **ReportResource**
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+### **Base Path:** `/relatorios`
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+#### **1. GET `/relatorios`**
+- **Descrição:** Retorna uma lista paginada de relatórios.
+- **Parâmetros de Query:**
+  - `page` (opcional, padrão: 1): Número da página.
+  - `size` (opcional, padrão: 20): Tamanho da página.
+- **Resposta:**
+  - **Status 200:** Retorna os relatórios.
+  - **Status 500:** Erro interno do servidor.
 
-If you want to build an _über-jar_, execute the following command:
+#### **2. GET `/relatorios/search`**
+- **Descrição:** Retorna uma lista paginada de relatórios filtrados.
+- **Parâmetros de Query:**
+  - `text` (opcional): Texto para busca no título ou informações.
+  - `type` (opcional): Tipo do relatório (`GERAL` ou `PERIODO`).
+  - `generationFrom` (opcional): Ano inicial de geração.
+  - `generationTo` (opcional): Ano final de geração.
+  - `periodFrom` (opcional): Ano inicial do período.
+  - `periodTo` (opcional): Ano final do período.
+  - `failuresOnUpTo` (opcional): Número máximo de falhas.
+  - `page` (opcional, padrão: 1): Número da página.
+  - `size` (opcional, padrão: 20): Tamanho da página.
+  - `orderby` (opcional, padrão: `date`): Campo de ordenação (`date` ou `title`).
+  - `ascending` (opcional, padrão: `false`): Ordenação crescente ou decrescente.
+- **Resposta:**
+  - **Status 200:** Retorna os relatórios filtrados.
+  - **Status 400:** Parâmetros inválidos.
+  - **Status 500:** Erro interno do servidor.
 
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
-```
+#### **3. GET `/relatorios/{id}`**
+- **Descrição:** Retorna um relatório pelo ID.
+- **Parâmetros de Path:**
+  - `id` (obrigatório): ID do relatório.
+- **Resposta:**
+  - **Status 200:** Retorna o relatório.
+  - **Status 404:** Relatório não encontrado.
+  - **Status 500:** Erro interno do servidor.
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+#### **4. PUT `/relatorios/{id}`**
+- **Descrição:** Atualiza um relatório pelo ID.
+- **Parâmetros de Path:**
+  - `id` (obrigatório): ID do relatório.
+- **Body:** Objeto JSON representando o novo estado do relatório.
+- **Resposta:**
+  - **Status 200:** Retorna o relatório atualizado.
+  - **Status 404:** Relatório não encontrado.
+  - **Status 500:** Erro interno do servidor.
 
-## Creating a native executable
+#### **5. POST `/relatorios`**
+- **Descrição:** Adiciona um novo relatório.
+- **Body:** Objeto JSON representando o relatório a ser criado.
+- **Resposta:**
+  - **Status 200:** Retorna o relatório criado.
+  - **Status 400:** Dados inválidos.
+  - **Status 500:** Erro interno do servidor.
 
-You can create a native executable using:
+---
 
-```shell script
-./mvnw package -Dnative
-```
+## **FailureResource**
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+### **Base Path:** `/falhas`
 
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
+#### **1. GET `/falhas`**
+- **Descrição:** Retorna uma lista paginada de falhas.
+- **Parâmetros de Query:**
+  - `page` (opcional, padrão: 1): Número da página.
+  - `size` (opcional, padrão: 20): Tamanho da página.
+- **Resposta:**
+  - **Status 200:** Retorna as falhas.
+  - **Status 500:** Erro interno do servidor.
 
-You can then execute your native executable with: `./target/mmobilidade.1tdspb-1.0.0-SNAPSHOT-runner`
+#### **2. GET `/falhas/search`**
+- **Descrição:** Retorna uma lista paginada de falhas filtradas.
+- **Parâmetros de Query:**
+  - `type` (opcional): Tipo da falha (`MECANICA`, `ELETRICA`, `SOFTWARE`, `OUTRO`).
+  - `from` (opcional): Ano inicial de geração.
+  - `to` (opcional): Ano final de geração.
+  - `page` (opcional, padrão: 1): Número da página.
+  - `size` (opcional, padrão: 20): Tamanho da página.
+  - `orderby` (opcional, padrão: `date`): Campo de ordenação (`date` ou `description`).
+  - `ascending` (opcional, padrão: `false`): Ordenação crescente ou decrescente.
+- **Resposta:**
+  - **Status 200:** Retorna as falhas filtradas.
+  - **Status 400:** Parâmetros inválidos.
+  - **Status 500:** Erro interno do servidor.
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
+#### **3. GET `/falhas/{id}`**
+- **Descrição:** Retorna uma falha pelo ID.
+- **Parâmetros de Path:**
+  - `id` (obrigatório): ID da falha.
+- **Resposta:**
+  - **Status 200:** Retorna a falha.
+  - **Status 404:** Falha não encontrada.
+  - **Status 500:** Erro interno do servidor.
 
-## Related Guides
+#### **4. PUT `/falhas/{id}`**
+- **Descrição:** Atualiza uma falha pelo ID.
+- **Parâmetros de Path:**
+  - `id` (obrigatório): ID da falha.
+- **Body:** Objeto JSON representando o novo estado da falha.
+- **Resposta:**
+  - **Status 200:** Retorna a falha atualizada.
+  - **Status 404:** Falha não encontrada.
+  - **Status 500:** Erro interno do servidor.
 
-- REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-
-## Provided Code
-
-### REST
-
-Easily start your REST Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+#### **5. POST `/falhas`**
+- **Descrição:** Adiciona uma nova falha.
+- **Body:** Objeto JSON representando a falha a ser criada.
+- **Resposta:**
+  - **Status 200:** Retorna a falha criada.
+  - **Status 400:** Dados inválidos.
+  - **Status 500:** Erro interno do servidor.

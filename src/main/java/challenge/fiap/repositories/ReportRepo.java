@@ -15,23 +15,23 @@ public class ReportRepo extends _BaseRepo implements _CrudRepo<Report> {
     @Override
     public void add(Report object) {
 
-        var query = "INSERT INTO TB_RELATORIOS ( " +
-                "id," +
-                "titulo," +
-                "info," +
-                "dt_grcao," +
-                "tipo_relatorio," +
-                "periodo_inicio," +
-                "periodo_fim," +
-                "total_falhas" +
-                "falhas_por_sts_pendente" +
-                "falhas_por_sts_cancelada" +
-                "falhas_por_sts_concluida" +
-                "falhas_por_tp_eletrica" +
-                "falhas_por_tp_mecanica" +
-                "falhas_por_tp_software" +
-                "falhas_por_tp_outro" +
-                "deletado )" +
+        var query = "INSERT INTO RELATORIOS ( " +
+                "ID," +
+                "TITLE," +
+                "INFO," +
+                "GENERATION_DATE," +
+                "REPORT_TYPE," +
+                "PERIOD_INICIAL_DATE," +
+                "PERIOD_FINAL_DATE," +
+                "TOTAL_NUMBER_OF_FAILURES" +
+                "NUMBER_OF_FAILURES_PENDENTE" +
+                "NUMBER_OF_FAILURES_CANCELADA" +
+                "NUMBER_OF_FAILURES_CONCLUIDA" +
+                "NUMBER_OF_FAILURES_ELETRICA" +
+                "NUMBER_OF_FAILURES_MECANICA" +
+                "NUMBER_OF_FAILURES_SOFTWARE" +
+                "NUMBER_OF_FAILURES_OUTRO" +
+                "DELETED )" +
                 " VALUES " +
                 "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)";
 
@@ -67,9 +67,9 @@ public class ReportRepo extends _BaseRepo implements _CrudRepo<Report> {
     @Override
     public List<Report> get() {
         var reportList = new ArrayList<Report>();
-        var query = "SELECT * FROM TB_RELATORIOS WHERE deleted = 0";
+        var query = "SELECT * FROM RELATORIOS WHERE DELETED = 0";
 
-        LOGGER.info("Buscando relatorios não deletados no banco de dados.");
+        LOGGER.info("Buscando relatorios não deleteds no banco de dados.");
 
         try (var connection = DatabaseConfig.getConnection()) {
             var stmt = connection.createStatement();
@@ -89,59 +89,59 @@ public class ReportRepo extends _BaseRepo implements _CrudRepo<Report> {
     }
 
     @Override
-    public Optional<Report> getById(UUID id) {
-        var query = "SELECT * FROM TB_RELATORIOS WHERE deleted = 0 AND id = ?";
+    public Optional<Report> getById(UUID ID) {
+        var query = "SELECT * FROM RELATORIOS WHERE DELETED = 0 AND ID = ?";
 
-        LOGGER.info("Buscando relatorio ativo por id no banco de dados.");
+        LOGGER.info("Buscando relatorio ativo por ID no banco de dados.");
 
         try (var connection = DatabaseConfig.getConnection()) {
             var stmt = connection.prepareStatement(query);
-            stmt.setString(1, id.toString());
+            stmt.setString(1, ID.toString());
             var result = stmt.executeQuery();
 
             if (result.next()) {
                 var report = createReport(result);
 
-                LOGGER.info("Relatorio por id encontrado: {}", id);
+                LOGGER.info("Relatorio por ID encontrado: {}", ID);
                 return Optional.of(report);
             } else {
-                LOGGER.warn("Relatorio não encontrado: {}", id);
+                LOGGER.warn("Relatorio não encontrado: {}", ID);
                 return Optional.empty();
             }
         } catch (SQLException e) {
-            LOGGER.error("Erro ao recuperar relatorio por id: {}", id);
+            LOGGER.error("Erro ao recuperar relatorio por ID: {}", ID);
             throw new RuntimeException("Erro ao recuperar relatorio");
         }
     }
 
     @Override
-    public void updateById(UUID id, Report object) {
+    public void updateById(UUID ID, Report object) {
         Report report;
-        if (getById(id).isPresent()) {
-            report = getById(id).get();
+        if (getById(ID).isPresent()) {
+            report = getById(ID).get();
         } else {
             return;
         }
 
-        var query = "UPDATE TB_RELATORIOS SET (" +
-                "titulo = ?," +
-                "info = ?," +
-                "dt_grcao = ?," +
-                "tipo_relatorio = ?," +
-                "periodo_inicio = ?," +
-                "periodo_fim = ?," +
-                "total_falhas = ?," +
-                "falhas_por_sts_pendente = ?," +
-                "falhas_por_sts_cancelada = ?," +
-                "falhas_por_sts_concluida = ?," +
-                "falhas_por_tp_mecanica = ?," +
-                "falhas_por_tp_eletrica = ?," +
-                "falhas_por_tp_software = ?," +
-                "falhas_por_tp_outro = ?," +
-                "deleted = ?," +
-                "WHERE id = ? ";
+        var query = "UPDATE RELATORIOS SET (" +
+                "TITLE = ?," +
+                "INFO = ?," +
+                "GENERATION_DATE = ?," +
+                "REPORT_TYPE = ?," +
+                "PERIOD_INICIAL_DATE = ?," +
+                "PERIOD_FINAL_DATE = ?," +
+                "TOTAL_NUMBER_OF_FAILURES = ?," +
+                "NUMBER_OF_FAILURES_PENDENTE = ?," +
+                "NUMBER_OF_FAILURES_CANCELADA = ?," +
+                "NUMBER_OF_FAILURES_CONCLUIDA = ?," +
+                "NUMBER_OF_FAILURES_MECANICA = ?," +
+                "NUMBER_OF_FAILURES_ELETRICA = ?," +
+                "NUMBER_OF_FAILURES_SOFTWARE = ?," +
+                "NUMBER_OF_FAILURES_OUTRO = ?," +
+                "DELETED = ?," +
+                "WHERE ID = ? ";
 
-        LOGGER.info("Atualizando relatorio ativo por id no banco de dados.");
+        LOGGER.info("Atualizando relatorio ativo por ID no banco de dados.");
 
         try (var connection = DatabaseConfig.getConnection()) {
             var stmt = connection.prepareStatement(query);
@@ -165,30 +165,30 @@ public class ReportRepo extends _BaseRepo implements _CrudRepo<Report> {
 
             stmt.executeUpdate();
 
-            LOGGER.info("Relatorio atualizado por id: {}", id);
+            LOGGER.info("Relatorio atualizado por ID: {}", ID);
 
         } catch (SQLException e) {
-            LOGGER.error("Erro ao atualizar relatorio por id: {}", id);
+            LOGGER.error("Erro ao atualizar relatorio por ID: {}", ID);
             throw new RuntimeException("Erro ao atualizar relatorio");
         }
     }
 
     @Override
-    public void removeById(UUID id) {
+    public void removeById(UUID ID) {
 
-        var query = "UPDATE TB_RELATORIOS SET deleted = 1 WHERE id = ?";
+        var query = "UPDATE RELATORIOS SET DELETED = 1 WHERE ID = ?";
 
-        LOGGER.info("Removendo relatorio por id no banco de dados.");
+        LOGGER.info("Removendo relatorio por ID no banco de dados.");
 
         try (var connection = DatabaseConfig.getConnection()) {
             var stmt = connection.prepareStatement(query);
-            stmt.setString(1, id.toString());
+            stmt.setString(1, ID.toString());
             stmt.executeUpdate();
 
-            LOGGER.info("Relatorio removido por id: {}", id);
+            LOGGER.info("Relatorio removido por ID: {}", ID);
 
         } catch (SQLException e) {
-            LOGGER.error("Erro ao remover relatorio por id: {}", id);
+            LOGGER.error("Erro ao remover relatorio por ID: {}", ID);
             throw new RuntimeException("Erro ao remover relatorio");
         }
 
@@ -197,7 +197,7 @@ public class ReportRepo extends _BaseRepo implements _CrudRepo<Report> {
     @Override
     public List<Report> getAll() {
         var reportList = new ArrayList<Report>();
-        var query = "SELECT * FROM TB_RELATORIOS";
+        var query = "SELECT * FROM RELATORIOS";
 
         LOGGER.info("Buscando relatorios no banco de dados.");
 
@@ -219,60 +219,60 @@ public class ReportRepo extends _BaseRepo implements _CrudRepo<Report> {
     }
 
     @Override
-    public Optional<Report> getByIdAdmin(UUID id) {
-        var query = "SELECT * FROM TB_RELATORIOS WHERE id = ?";
+    public Optional<Report> getByIdAdmin(UUID ID) {
+        var query = "SELECT * FROM RELATORIOS WHERE ID = ?";
 
-        LOGGER.info("Buscando relatorio por id no banco de dados.");
+        LOGGER.info("Buscando relatorio por ID no banco de dados.");
 
         try (var connection = DatabaseConfig.getConnection()) {
             var stmt = connection.prepareStatement(query);
-            stmt.setString(1, id.toString());
+            stmt.setString(1, ID.toString());
             var result = stmt.executeQuery();
 
             if (result.next()) {
                 var report = createReport(result);
 
-                LOGGER.info("Relatorio geral por id encontrado: {}", id);
+                LOGGER.info("Relatorio geral por ID encontrado: {}", ID);
                 return Optional.of(report);
             } else {
-                LOGGER.warn("Relatorio geral não encontrado: {}", id);
+                LOGGER.warn("Relatorio geral não encontrado: {}", ID);
                 return Optional.empty();
             }
         } catch (SQLException e) {
-            LOGGER.error("Erro ao recuperar relatorio geral por id: {}", id);
+            LOGGER.error("Erro ao recuperar relatorio geral por ID: {}", ID);
             throw new RuntimeException("Erro ao recuperar relatorio");
         }
     }
 
     @Override
-    public void deleteById(UUID id) {
-        var query = "DELETE FROM TB_RELATORIOS WHERE id = ?";
+    public void deleteById(UUID ID) {
+        var query = "DELETE FROM RELATORIOS WHERE ID = ?";
 
-        LOGGER.info("Deletando relatorio por id no banco de dados.");
+        LOGGER.info("Deletando relatorio por ID no banco de dados.");
 
         try (var connection = DatabaseConfig.getConnection()) {
             var stmt = connection.prepareStatement(query);
-            stmt.setString(1, id.toString());
+            stmt.setString(1, ID.toString());
             stmt.executeUpdate();
 
-            LOGGER.info("Relatorio deletado por id: {}", id);
+            LOGGER.info("Relatorio DELETED por ID: {}", ID);
 
         } catch (SQLException e) {
-            LOGGER.error("Erro ao deletar relatorio por id: {}", id);
+            LOGGER.error("Erro ao deletar relatorio por ID: {}", ID);
             throw new RuntimeException("Erro ao deletar relatorio");
         }
     }
 
     @Override
     public void remove(Report object) {
-        var id = object.getId();
-        removeById(id);
+        var ID = object.getId();
+        removeById(ID);
     }
 
     @Override
     public void delete(Report object) {
-        var id = object.getId();
-        deleteById(id);
+        var ID = object.getId();
+        deleteById(ID);
     }
 
     @Override
@@ -283,22 +283,22 @@ public class ReportRepo extends _BaseRepo implements _CrudRepo<Report> {
 
     private Report createReport(ResultSet result) throws SQLException {
         var report = new Report();
-        report.setId(UUID.fromString(result.getString("id")));
-        report.setDeleted(result.getBoolean("deleted"));
+        report.setId(UUID.fromString(result.getString("ID")));
+        report.setDeleted(result.getBoolean("DELETED"));
 
-        report.setTitle(result.getString("id"));
-        report.setInfo(result.getString("info"));
-        report.setReportType(REPORT_TYPE.fromString(result.getString("tipo_relatorio")));
-        report.setPeriodInicialDate(result.getTimestamp("periodo_inicio").toLocalDateTime());
+        report.setTitle(result.getString("ID"));
+        report.setInfo(result.getString("INFO"));
+        report.setReportType(REPORT_TYPE.fromString(result.getString("REPORT_TYPE")));
+        report.setPeriodInicialDate(result.getTimestamp("PERIOD_INICIAL_DATE").toLocalDateTime());
         report.setPeriodFinalDate(result.getTimestamp("periodo_final").toLocalDateTime());
-        report.setTotalNumberOfFailures(result.getInt("total_falhas"));
-        report.getNumberOfFailuresByStatus().put(FAILURE_STATUS.PENDENTE, result.getInt("falhas_por_sts_pendente"));
-        report.getNumberOfFailuresByStatus().put(FAILURE_STATUS.CANCELADA, result.getInt("falhas_por_sts_cancelada"));
-        report.getNumberOfFailuresByStatus().put(FAILURE_STATUS.CONCLUIDA, result.getInt("falhas_por_sts_concluida"));
-        report.getNumberOfFailuresByType().put(FAILURE_TYPE.MECANICA, result.getInt("falhas_por_tp_mecanica"));
-        report.getNumberOfFailuresByType().put(FAILURE_TYPE.ELETRICA, result.getInt("falhas_por_tp_eletrica"));
-        report.getNumberOfFailuresByType().put(FAILURE_TYPE.SOFTWARE, result.getInt("falhas_por_tp_software"));
-        report.getNumberOfFailuresByType().put(FAILURE_TYPE.OUTRO, result.getInt("falhas_por_tp_outro"));
+        report.setTotalNumberOfFailures(result.getInt("TOTAL_NUMBER_OF_FAILURES"));
+        report.getNumberOfFailuresByStatus().put(FAILURE_STATUS.PENDENTE, result.getInt("NUMBER_OF_FAILURES_PENDENTE"));
+        report.getNumberOfFailuresByStatus().put(FAILURE_STATUS.CANCELADA, result.getInt("NUMBER_OF_FAILURES_CANCELADA"));
+        report.getNumberOfFailuresByStatus().put(FAILURE_STATUS.CONCLUIDA, result.getInt("NUMBER_OF_FAILURES_CONCLUIDA"));
+        report.getNumberOfFailuresByType().put(FAILURE_TYPE.MECANICA, result.getInt("NUMBER_OF_FAILURES_MECANICA"));
+        report.getNumberOfFailuresByType().put(FAILURE_TYPE.ELETRICA, result.getInt("NUMBER_OF_FAILURES_ELETRICA"));
+        report.getNumberOfFailuresByType().put(FAILURE_TYPE.SOFTWARE, result.getInt("NUMBER_OF_FAILURES_SOFTWARE"));
+        report.getNumberOfFailuresByType().put(FAILURE_TYPE.OUTRO, result.getInt("NUMBER_OF_FAILURES_OUTRO"));
 
         return report;
     }

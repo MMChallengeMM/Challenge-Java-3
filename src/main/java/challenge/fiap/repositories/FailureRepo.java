@@ -17,14 +17,14 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
     @Override
     public void add(Failure object) {
 
-        var query = "INSERT INTO TB_FALHAS (" +
-                "id," +
-                "desc_falha," +
-                "status," +
-                "tipo," +
-                "dt_hr," +
-                "deleted," +
-                "emRelatorioGeral)" +
+        var query = "INSERT INTO FALHAS (" +
+                "ID," +
+                "DESCRIPTION," +
+                "FAILURE_STATUS," +
+                "FAILURE_TYPE," +
+                "GENERATION_DATE," +
+                "DELETED," +
+                "ON_GENERAL_REPORT)" +
                 " VALUES (?, ?, ?, ?, ?, 0, ?)";
 
         LOGGER.info("Criando falha: {}", object.getId());
@@ -51,7 +51,7 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
     public List<Failure> get() {
 
         var failureList = new ArrayList<Failure>();
-        var query = "SELECT * FROM TB_FALHAS WHERE deleted = 0";
+        var query = "SELECT * FROM FALHAS WHERE DELETED = 0";
 
         LOGGER.info("Buscando falhas não deletadas no banco de dados.");
 
@@ -73,44 +73,44 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
     }
 
     @Override
-    public Optional<Failure> getById(UUID id) {
-        var query = "SELECT * FROM TB_FALHAS WHERE deleted = 0 AND id = ?";
+    public Optional<Failure> getById(UUID ID) {
+        var query = "SELECT * FROM FALHAS WHERE DELETED = 0 AND ID = ?";
 
-        LOGGER.info("Buscando falha ativa por id no banco de dados.");
+        LOGGER.info("Buscando falha ativa por ID no banco de dados.");
 
         try (var connection = DatabaseConfig.getConnection()) {
             var stmt = connection.prepareStatement(query);
-            stmt.setString(1, id.toString());
+            stmt.setString(1, ID.toString());
             var result = stmt.executeQuery();
 
             if (result.next()) {
                 var failure = createFailure(result);
 
-                LOGGER.info("Falha por id encontrado: {}", id);
+                LOGGER.info("Falha por ID encontrado: {}", ID);
                 return Optional.of(failure);
             } else {
-                LOGGER.warn("Falha não encontrada: {}", id);
+                LOGGER.warn("Falha não encontrada: {}", ID);
                 return Optional.empty();
             }
         } catch (SQLException e) {
-            LOGGER.error("Erro ao recuperar falha por id: {}", id);
+            LOGGER.error("Erro ao recuperar falha por ID: {}", ID);
             throw new RuntimeException("Erro ao recuperar falha");
         }
     }
 
 
     @Override
-    public void updateById(UUID id, Failure object) {
+    public void updateById(UUID ID, Failure object) {
         Failure failure;
-        if (getById(id).isPresent()) {
-            failure = getById(id).get();
+        if (getById(ID).isPresent()) {
+            failure = getById(ID).get();
         } else {
             return;
         }
 
-        var query = "UPDATE TB_FALHAS SET desc_falha = ?, status = ?, tipo = ?, dt_hr = ?, deleted = ?, emRelatorioGeral = ? WHERE id = ? ";
+        var query = "UPDATE FALHAS SET DESCRIPTION = ?, FAILURE_STATUS = ?, FAILURE_TYPE = ?, GENERATION_DATE = ?, DELETED = ?, ON_GENERAL_REPORT = ? WHERE ID = ? ";
 
-        LOGGER.info("Atualizando falha ativa por id no banco de dados.");
+        LOGGER.info("Atualizando falha ativa por ID no banco de dados.");
 
         try (var connection = DatabaseConfig.getConnection()) {
             var stmt = connection.prepareStatement(query);
@@ -123,30 +123,30 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
             stmt.setString(7,failure.getId().toString());
             stmt.executeUpdate();
 
-            LOGGER.info("Falha atualizada por id: {}", id);
+            LOGGER.info("Falha atualizada por ID: {}", ID);
 
         } catch (SQLException e) {
-            LOGGER.error("Erro ao atualizar falha por id: {}", id);
+            LOGGER.error("Erro ao atualizar falha por ID: {}", ID);
             throw new RuntimeException("Erro ao atualizar falha");
         }
     }
 
     @Override
-    public void removeById(UUID id) {
+    public void removeById(UUID ID) {
 
-        var query = "UPDATE TB_FALHAS SET deleted = 1 WHERE id = ?";
+        var query = "UPDATE FALHAS SET DELETED = 1 WHERE ID = ?";
 
-        LOGGER.info("Removendo falha por id no banco de dados.");
+        LOGGER.info("Removendo falha por ID no banco de dados.");
 
         try (var connection = DatabaseConfig.getConnection()) {
             var stmt = connection.prepareStatement(query);
-            stmt.setString(1, id.toString());
+            stmt.setString(1, ID.toString());
             stmt.executeUpdate();
 
-            LOGGER.info("Falha removida por id: {}", id);
+            LOGGER.info("Falha removida por ID: {}", ID);
 
         } catch (SQLException e) {
-            LOGGER.error("Erro ao remover falha por id: {}", id);
+            LOGGER.error("Erro ao remover falha por ID: {}", ID);
             throw new RuntimeException("Erro ao remover falha");
         }
     }
@@ -154,7 +154,7 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
     @Override
     public List<Failure> getAll() {
         var failureList = new ArrayList<Failure>();
-        var query = "SELECT * FROM TB_FALHAS";
+        var query = "SELECT * FROM FALHAS";
 
         LOGGER.info("Buscando falhas no banco de dados.");
 
@@ -176,60 +176,60 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
     }
 
     @Override
-    public Optional<Failure> getByIdAdmin(UUID id) {
-        var query = "SELECT * FROM TB_FALHAS WHERE id = ?";
+    public Optional<Failure> getByIdAdmin(UUID ID) {
+        var query = "SELECT * FROM FALHAS WHERE ID = ?";
 
-        LOGGER.info("Buscando falha por id no banco de dados.");
+        LOGGER.info("Buscando falha por ID no banco de dados.");
 
         try (var connection = DatabaseConfig.getConnection()) {
             var stmt = connection.prepareStatement(query);
-            stmt.setString(1, id.toString());
+            stmt.setString(1, ID.toString());
             var result = stmt.executeQuery();
 
             if (result.next()) {
                 var failure = createFailure(result);
 
-                LOGGER.info("Falha geral por id encontrada: {}", id);
+                LOGGER.info("Falha geral por ID encontrada: {}", ID);
                 return Optional.of(failure);
             } else {
-                LOGGER.warn("Falha geral não encontrada: {}", id);
+                LOGGER.warn("Falha geral não encontrada: {}", ID);
                 return Optional.empty();
             }
         } catch (SQLException e) {
-            LOGGER.error("Erro ao recuperar falha geral por id: {}", id);
+            LOGGER.error("Erro ao recuperar falha geral por ID: {}", ID);
             throw new RuntimeException("Erro ao recuperar falha");
         }
     }
 
     @Override
-    public void deleteById(UUID id) {
-        var query = "DELETE FROM TB_FALHAS WHERE id = ?";
+    public void deleteById(UUID ID) {
+        var query = "DELETE FROM FALHAS WHERE ID = ?";
 
-        LOGGER.info("Deletando falha por id no banco de dados.");
+        LOGGER.info("Deletando falha por ID no banco de dados.");
 
         try (var connection = DatabaseConfig.getConnection()) {
             var stmt = connection.prepareStatement(query);
-            stmt.setString(1, id.toString());
+            stmt.setString(1, ID.toString());
             stmt.executeUpdate();
 
-            LOGGER.info("Falha deletada por id: {}", id);
+            LOGGER.info("Falha deletada por ID: {}", ID);
 
         } catch (SQLException e) {
-            LOGGER.error("Erro ao deletar falha por id: {}", id);
+            LOGGER.error("Erro ao deletar falha por ID: {}", ID);
             throw new RuntimeException("Erro ao deletar falha");
         }
     }
 
     @Override
     public void remove(Failure object) {
-        var id = object.getId();
-        removeById(id);
+        var ID = object.getId();
+        removeById(ID);
     }
 
     @Override
     public void delete(Failure object) {
-        var id = object.getId();
-        deleteById(id);
+        var ID = object.getId();
+        deleteById(ID);
     }
 
     @Override
@@ -240,14 +240,14 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
 
     private Failure createFailure(ResultSet result) throws SQLException {
         var failure = new Failure();
-        failure.setId(UUID.fromString(result.getString("id")));
-        failure.setDeleted(result.getBoolean("deleted"));
+        failure.setId(UUID.fromString(result.getString("ID")));
+        failure.setDeleted(result.getBoolean("DELETED"));
 
-        failure.setDescription(result.getString("desc_falha"));
-        failure.setFailureStatus(FAILURE_STATUS.valueOf(result.getString("status")));
-        failure.setFailureType(FAILURE_TYPE.valueOf(result.getString("tipo")));
-        failure.setGenerationDate((result.getTimestamp("dt_hr")).toLocalDateTime());
-        failure.setOnGeneralReport(result.getBoolean("emRelatorioGeral"));
+        failure.setDescription(result.getString("DESCRIPTION"));
+        failure.setFailureStatus(FAILURE_STATUS.valueOf(result.getString("FAILURE_STATUS")));
+        failure.setFailureType(FAILURE_TYPE.valueOf(result.getString("FAILURE_TYPE")));
+        failure.setGenerationDate((result.getTimestamp("GENERATION_DATE")).toLocalDateTime());
+        failure.setOnGeneralReport(result.getBoolean("ON_GENERAL_REPORT"));
 
         return failure;
     }
