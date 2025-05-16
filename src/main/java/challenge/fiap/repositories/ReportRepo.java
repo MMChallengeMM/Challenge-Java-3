@@ -23,14 +23,14 @@ public class ReportRepo extends _BaseRepo implements _CrudRepo<Report> {
                 "REPORT_TYPE," +
                 "PERIOD_INICIAL_DATE," +
                 "PERIOD_FINAL_DATE," +
-                "TOTAL_NUMBER_OF_FAILURES" +
-                "NUMBER_OF_FAILURES_PENDENTE" +
-                "NUMBER_OF_FAILURES_CANCELADA" +
-                "NUMBER_OF_FAILURES_CONCLUIDA" +
-                "NUMBER_OF_FAILURES_ELETRICA" +
-                "NUMBER_OF_FAILURES_MECANICA" +
-                "NUMBER_OF_FAILURES_SOFTWARE" +
-                "NUMBER_OF_FAILURES_OUTRO" +
+                "TOTAL_NUMBER_OF_FAILURES," +
+                "NUMBER_OF_FAILURES_PENDENTE," +
+                "NUMBER_OF_FAILURES_CANCELADA," +
+                "NUMBER_OF_FAILURES_CONCLUIDA," +
+                "NUMBER_OF_FAILURES_ELETRICA," +
+                "NUMBER_OF_FAILURES_MECANICA," +
+                "NUMBER_OF_FAILURES_SOFTWARE," +
+                "NUMBER_OF_FAILURES_OUTRO," +
                 "DELETED )" +
                 " VALUES " +
                 "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)";
@@ -57,6 +57,13 @@ public class ReportRepo extends _BaseRepo implements _CrudRepo<Report> {
             stmt.executeUpdate();
 
             LOGGER.info("Relatório adicionado com sucesso: {}", object.getId());
+
+            if (object.getReportType() == REPORT_TYPE.GERAL) {
+                var FREPO = new FailureRepo();
+                var failures = FREPO.getOffReport();
+                failures.forEach(f -> f.setOnGeneralReport(true));
+                FREPO.updateFailureList(failures);
+            }
 
         } catch (SQLException e) {
             LOGGER.error("Erro ao adicionar relatório: {}", e);

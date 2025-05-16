@@ -72,6 +72,30 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
         }
     }
 
+    public List<Failure> getOffReport() {
+
+        var failureList = new ArrayList<Failure>();
+        var query = "SELECT * FROM FALHAS WHERE DELETED = 0 AND ON_GENERAL_REPORT = 0";
+
+        LOGGER.info("Buscando falhas não deletadas a reportar no banco de dados.");
+
+        try (var connection = DatabaseConfig.getConnection()) {
+            var stmt = connection.createStatement();
+            var result = stmt.executeQuery(query);
+
+            while (result.next()) {
+                var failure = createFailure(result);
+                failureList.add(failure);
+            }
+
+            LOGGER.info("Falhas ativas a reportar encontradas.");
+            return failureList;
+        } catch (SQLException e) {
+            LOGGER.error("Erro ao recuperar falhas a reportar: {}", e.getMessage());
+            throw new RuntimeException("Erro ao recuperar falhas a reportar");
+        }
+    }
+
     @Override
     public Optional<Failure> getById(UUID ID) {
         var query = "SELECT * FROM FALHAS WHERE DELETED = 0 AND ID = ?";
@@ -128,6 +152,12 @@ public class FailureRepo extends _BaseRepo implements _CrudRepo<Failure> {
         } catch (SQLException e) {
             LOGGER.error("Erro ao atualizar falha por ID: {}", ID);
             throw new RuntimeException("Erro ao atualizar falha");
+        }
+    }
+
+    public void updateFailureList(List<Failure> failures) {
+        for (var failure : failures) {
+            updateById(failure.getId(), failure);
         }
     }
 

@@ -3,21 +3,11 @@
     <Appenders>
         <File name="InfoLogger" fileName="logs/infos.log" append="true">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n"/>
-            <Filters>
-                <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
-            </Filters>
-        </File>
-        <File name="ErrorLogger" fileName="logs/errors.log" append="true">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n"/>
-            <Filters>
-                <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
-            </Filters>
         </File>
     </Appenders>
     <Loggers>
         <Root level="info">
             <AppenderRef ref="InfoLogger"/>
-            <AppenderRef ref="ErrorLogger"/>
         </Root>
     </Loggers>
 </Configuration>
